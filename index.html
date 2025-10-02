@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle - เกมทายคำ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .game-board {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .tile {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #d3d6da;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .tile.filled {
+            border-color: #878a8c;
+            animation: pop 0.1s ease;
+        }
+
+        .tile.correct {
+            background-color: #6aaa64;
+            border-color: #6aaa64;
+            color: white;
+        }
+
+        .tile.present {
+            background-color: #c9b458;
+            border-color: #c9b458;
+            color: white;
+        }
+
+        .tile.absent {
+            background-color: #787c7e;
+            border-color: #787c7e;
+            color: white;
+        }
+
+        .tile.flip {
+            animation: flip 0.5s ease;
+        }
+
+        @keyframes pop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes flip {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0); }
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .key {
+            background-color: #d3d6da;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            min-width: 35px;
+            text-transform: uppercase;
+            transition: all 0.1s ease;
+        }
+
+        .key:hover {
+            background-color: #bbb;
+            transform: scale(1.05);
+        }
+
+        .key:active {
+            transform: scale(0.95);
+        }
+
+        .key.wide {
+            min-width: 60px;
+            font-size: 0.8em;
+        }
+
+        .key.correct {
+            background-color: #6aaa64;
+            color: white;
+        }
+
+        .key.present {
+            background-color: #c9b458;
+            color: white;
+        }
+
+        .key.absent {
+            background-color: #787c7e;
+            color: white;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.win {
+            background-color: #6aaa64;
+        }
+
+        .message.lose {
+            background-color: #e74c3c;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        button.reset {
+            margin: 20px auto 0;
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button.reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WORDLE</h1>
+        <p class="subtitle">ทายคำภาษาอังกฤษ 5 ตัวอักษร</p>
+        
+        <div class="game-board" id="gameBoard"></div>
+        
+        <div class="keyboard" id="keyboard"></div>
+        
+        <button class="reset" onclick="resetGame()">เริ่มเกมใหม่</button>
+        
+        <div class="stats" id="stats">
+            พิมพ์หรือคลิกตัวอักษรเพื่อเริ่มเล่น
+        </div>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        const WORD_LENGTH = 5;
+        const MAX_GUESSES = 6;
+        
+        let targetWord = '';
+        let currentGuess = '';
+        let currentRow = 0;
+        let gameOver = false;
+        let wordList = [];
+        let keyColors = {};
+
+        const gameBoard = document.getElementById('gameBoard');
+        const keyboard = document.getElementById('keyboard');
+        const message = document.getElementById('message');
+        const stats = document.getElementById('stats');
+
+        const keyboardLayout = [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
+        ];
+
+        // สร้างกระดานเกม
+        function createBoard() {
+            gameBoard.innerHTML = '';
+            for (let i = 0; i < MAX_GUESSES; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.id = `row-${i}`;
+                
+                for (let j = 0; j < WORD_LENGTH; j++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.id = `tile-${i}-${j}`;
+                    row.appendChild(tile);
+                }
+                
+                gameBoard.appendChild(row);
+            }
+        }
+
+        // สร้างแป้นพิมพ์
+        function createKeyboard() {
+            keyboard.innerHTML = '';
+            keyboardLayout.forEach(row => {
+                const keyRow = document.createElement('div');
+                keyRow.className = 'keyboard-row';
+                
+                row.forEach(key => {
+                    const keyButton = document.createElement('button');
+                    keyButton.className = 'key';
+                    keyButton.textContent = key;
+                    keyButton.id = `key-${key}`;
+                    
+                    if (key === 'ENTER' || key === 'BACK') {
+                        keyButton.classList.add('wide');
+                    }
+                    
+                    keyButton.onclick = () => handleKey(key);
+                    keyRow.appendChild(keyButton);
+                });
+                
+                keyboard.appendChild(keyRow);
+            });
+        }
+
+        // โหลดคำศัพท์จากไฟล์ JSON
+        async function loadWords() {
+            try {
+                const wordsData = {
+                    "words": ["ACUTE","ADAPT","ADOPT","ADULT","AGENT","ALARM","ALBUM","ALERT","ALIEN","ALIGN","ALIKE","ALIVE","ALLOW","ALONE","ALTER","ANGEL","ANGER","ANGLE","APART","APPLE","APPLY","ARENA","ARGUE","ARISE","ARRAY","ARROW","ASIDE","ASSET","AVOID","AWAKE","AWARD","AWARE","BADLY","BASIC","BEACH","BEGUN","BEING","BELOW","BENCH","BILLY","BIRTH","BLACK","BLAME","BLIND","BLOCK","BLOOD","BOARD","BOOST","BOOTH","BOUND","BRAIN","BRAND","BREAD","BREAK","BREED","BRIEF","BRING","BROAD","BROKE","BROWN","BUILD","BUILT","BUYER","CABLE","CALIF","CARRY","CATCH","CAUSE","CHAIN","CHAIR","CHART","CHASE","CHEAP","CHECK","CHEST","CHIEF","CHILD","CHINA","CHOSE","CIVIL","CLAIM","CLASS","CLEAN","CLEAR","CLICK","CLOCK","CLOSE","COACH","COAST","COULD","COUNT","COURT","COVER","CRACK","CRAFT","CRASH","CRAZY","CREAM","CRIME","CROSS","CROWD","CROWN","CRUDE","CURVE","CYCLE","DAILY","DANCE","DATED","DEALT","DEATH","DEBUT","DELAY","DEPTH","DOING","DOUBT","DOZEN","DRAFT","DRAMA","DRANK","DRAWN","DREAM","DRESS","DRILL","DRINK","DRIVE","DROVE","DYING","EAGER","EARLY","EARTH","EIGHT","ELITE","EMPTY","ENEMY","ENJOY","ENTER","ENTRY","EQUAL","ERROR","EVENT","EVERY","EXACT","EXIST","EXTRA","FAITH","FALSE","FAULT","FIBER","FIELD","FIFTH","FIFTY","FIGHT","FINAL","FIRST","FIXED","FLASH","FLEET","FLOOR","FLUID","FOCUS","FORCE","FORTH","FORTY","FORUM","FOUND","FRAME","FRANK","FRAUD","FRESH","FRONT","FRUIT","FULLY","FUNNY","GIANT","GIVEN","GLASS","GLOBE","GOING","GRACE","GRADE","GRAND","GRANT","GRASS","GREAT","GREEN","GROSS","GROUP","GROWN","GUARD","GUESS","GUEST","GUIDE","HAPPY","HARRY","HEART","HEAVY","HENCE","HENRY","HORSE","HOTEL","HOUSE","HUMAN","IDEAL","IMAGE","INDEX","INNER","INPUT","ISSUE","JAPAN","JIMMY","JOINT","JONES","JUDGE","KNOWN","LABEL","LARGE","LASER","LATER","LAUGH","LAYER","LEARN","LEASE","LEAST","LEAVE","LEGAL","LEMON","LEVEL","LEWIS","LIGHT","LIMIT","LINKS","LIVES","LOCAL","LOGIC","LOOSE","LOWER","LUCKY","LUNCH","LYING","MAGIC","MAJOR","MAKER","MARCH","MARIA","MATCH","MAYBE","MAYOR","MEANT","MEDIA","METAL","MIGHT","MINOR","MINUS","MIXED","MODEL","MONEY","MONTH","MORAL","MOTOR","MOUNT","MOUSE","MOUTH","MOVIE","MUSIC","NEEDS","NEVER","NEWLY","NIGHT","NOISE","NORTH","NOTED","NOVEL","NURSE","OCCUR","OCEAN","OFFER","OFTEN","ORDER","OTHER","OUGHT","PAINT","PANEL","PAPER","PARTY","PEACE","PETER","PHASE","PHONE","PHOTO","PIECE","PILOT","PITCH","PLACE","PLAIN","PLANE","PLANT","PLATE","POINT","POUND","POWER","PRESS","PRICE","PRIDE","PRIME","PRINT","PRIOR","PRIZE","PROOF","PROUD","PROVE","QUEEN","QUICK","QUIET","QUITE","RADIO","RAISE","RANGE","RAPID","RATIO","REACH","READY","REFER","RIGHT","RIVAL","RIVER","ROBIN","ROGER","ROMAN","ROUGH","ROUND","ROUTE","ROYAL","RURAL","SCALE","SCENE","SCOPE","SCORE","SENSE","SERVE","SEVEN","SHALL","SHAPE","SHARE","SHARP","SHEET","SHELF","SHELL","SHIFT","SHINE","SHIRT","SHOCK","SHOOT","SHORT","SHOWN","SIGHT","SINCE","SIXTH","SIXTY","SIZED","SKILL","SLEEP","SLIDE","SMALL","SMART","SMILE","SMITH","SMOKE","SOLID","SOLVE","SORRY","SOUND","SOUTH","SPACE","SPARE","SPEAK","SPEED","SPEND","SPENT","SPLIT","SPOKE","SPORT","STAFF","STAGE","STAKE","STAND","START","STATE","STEAM","STEEL","STICK","STILL","STOCK","STONE","STOOD","STORE","STORM","STORY","STRIP","STUCK","STUDY","STUFF","STYLE","SUGAR","SUITE","SUPER","SWEET","TABLE","TAKEN","TASTE","TAXES","TEACH","TEETH","TERRY","TEXAS","THANK","THEFT","THEIR","THEME","THERE","THESE","THICK","THING","THINK","THIRD","THOSE","THREE","THREW","THROW","TIGHT","TIMES","TITLE","TODAY","TOPIC","TOTAL","TOUCH","TOUGH","TOWER","TRACK","TRADE","TRAIN","TREAT","TREND","TRIAL","TRIBE","TRICK","TRIED","TROOP","TRUCK","TRULY","TRUNK","TRUST","TRUTH","TWICE","UNCLE","UNDER","UNDUE","UNION","UNITY","UNTIL","UPPER","UPSET","URBAN","USAGE","USUAL","VALID","VALUE","VIDEO","VIRUS","VISIT","VITAL","VOCAL","VOICE","WASTE","WATCH","WATER","WHEEL","WHERE","WHICH","WHILE","WHITE","WHOLE","WHOSE","WOMAN","WOMEN","WORLD","WORRY","WORSE","WORST","WORTH","WOULD","WOUND","WRITE","WRONG","WROTE","YOUNG","YOUTH"]
+                };
+                
+                wordList = wordsData.words;
+                targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+                console.log('คำที่ต้องทาย:', targetWord);
+            } catch (error) {
+                console.error('ไม่สามารถโหลดคำศัพท์ได้:', error);
+                showMessage('เกิดข้อผิดพลาดในการโหลดเกม');
+            }
+        }
+
+        // จัดการการกดปุ่ม
+        function handleKey(key) {
+            if (gameOver) return;
+
+            if (key === 'BACK') {
+                if (currentGuess.length > 0) {
+                    currentGuess = currentGuess.slice(0, -1);
+                    updateBoard();
+                }
+            } else if (key === 'ENTER') {
+                if (currentGuess.length === WORD_LENGTH) {
+                    if (!wordList.includes(currentGuess)) {
+                        showMessage('ไม่มีคำนี้ในรายการ');
+                        return;
+                    }
+                    checkGuess();
+                } else {
+                    showMessage('กรุณากรอกคำให้ครบ 5 ตัวอักษร');
+                }
+            } else {
+                if (currentGuess.length < WORD_LENGTH) {
+                    currentGuess += key;
+                    updateBoard();
+                }
+            }
+        }
+
+        // อัพเดตการแสดงผลบนกระดาน
+        function updateBoard() {
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                const tile = document.getElementById(`tile-${currentRow}-${i}`);
+                tile.textContent = currentGuess[i] || '';
+                
+                if (currentGuess[i]) {
+                    tile.classList.add('filled');
+                } else {
+                    tile.classList.remove('filled');
+                }
+            }
+        }
+
+        // ตรวจสอบคำที่ทาย
+        function checkGuess() {
+            const letterCount = {};
+            for (let letter of targetWord) {
+                letterCount[letter] = (letterCount[letter] || 0) + 1;
+            }
+
+            const results = Array(WORD_LENGTH).fill('absent');
+            const guessArray = currentGuess.split('');
+
+            // ตรวจสอบตัวอักษรที่ถูกต้องและอยู่ในตำแหน่งที่ถูกต้อง
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (guessArray[i] === targetWord[i]) {
+                    results[i] = 'correct';
+                    letterCount[guessArray[i]]--;
+                }
+            }
+
+            // ตรวจสอบตัวอักษรที่อยู่ในคำแต่ตำแหน่งไม่ถูก
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (results[i] === 'absent' && targetWord.includes(guessArray[i]) && letterCount[guessArray[i]] > 0) {
+                    results[i] = 'present';
+                    letterCount[guessArray[i]]--;
+                }
+            }
+
+            // แสดงผลลัพธ์
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                const tile = document.getElementById(`tile-${currentRow}-${i}`);
+                const letter = guessArray[i];
+                
+                setTimeout(() => {
+                    tile.classList.add('flip', results[i]);
+                    updateKeyColor(letter, results[i]);
+                }, i * 200);
+            }
+
+            // ตรวจสอบว่าชนะหรือไม่
+            if (currentGuess === targetWord) {
+                setTimeout(() => {
+                    gameOver = true;
+                    showMessage('🎉 ยินดีด้วย! คุณทายถูกแล้ว!', 'win');
+                    updateStats(`คุณทายถูกใน ${currentRow + 1} ครั้ง`);
+                }, WORD_LENGTH * 200 + 500);
+            } else if (currentRow === MAX_GUESSES - 1) {
+                setTimeout(() => {
+                    gameOver = true;
+                    showMessage(`คำที่ถูกต้องคือ: ${targetWord}`, 'lose');
+                    updateStats('ลองใหม่อีกครั้ง!');
+                }, WORD_LENGTH * 200 + 500);
+            } else {
+                currentRow++;
+                currentGuess = '';
+            }
+        }
+
+        // อัพเดตสีของปุ่มบนแป้นพิมพ์
+        function updateKeyColor(letter, result) {
+            const key = document.getElementById(`key-${letter}`);
+            if (!key) return;
+
+            const priority = { correct: 3, present: 2, absent: 1 };
+            const currentPriority = priority[keyColors[letter]] || 0;
+            const newPriority = priority[result];
+
+            if (newPriority > currentPriority) {
+                keyColors[letter] = result;
+                key.className = `key ${result}`;
+            }
+        }
+
+        // แสดงข้อความ
+        function showMessage(text, type = '') {
+            message.textContent = text;
+            message.className = `message show ${type}`;
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+
+        // อัพเดตสถิติ
+        function updateStats(text) {
+            stats.textContent = text;
+        }
+
+        // รีเซ็ตเกม
+        function resetGame() {
+            currentGuess = '';
+            currentRow = 0;
+            gameOver = false;
+            keyColors = {};
+            targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+            console.log('คำที่ต้องทาย:', targetWord);
+            
+            createBoard();
+            createKeyboard();
+            updateStats('พิมพ์หรือคลิกตัวอักษรเพื่อเริ่มเล่น');
+        }
+
+        // รับการกดแป้นพิมพ์
+        document.addEventListener('keydown', (e) => {
+            if (gameOver) return;
+
+            const key = e.key.toUpperCase();
+            
+            if (key === 'BACKSPACE') {
+                handleKey('BACK');
+            } else if (key === 'ENTER') {
+                handleKey('ENTER');
+            } else if (key.length === 1 && key >= 'A' && key <= 'Z') {
+                handleKey(key);
+            }
+        });
+
+        // เริ่มเกม
+        async function initGame() {
+            await loadWords();
+            createBoard();
+            createKeyboard();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
