@@ -1,45 +1,20 @@
-<!-- index.html (Dark Mode, Mobile-friendly, A2–C1 + Random) -->
+<!-- index.html (Dark Mode, Mobile-friendly, A2–C1 + Random, Global Dictionary Validation) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <!-- ป้องกันซูมอัตโนมัติ/ดับเบิลแท็ปซูมบนมือถือ -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Wordle - เกมทายคำ (A2–C1 + Random)</title>
   <style>
     :root{
-      /* โทนมืดสมัยใหม่ */
-      --bg: #0b0f14;               /* พื้นหลังหลัก */
-      --bg-grad-1: #0b0f14;
-      --bg-grad-2: #0f1620;
-      --panel: #111826;            /* แผง/การ์ด */
-      --panel-2: #0e1520;
-      --border: #1f2937;           /* เส้นขอบ */
-      --text: #e5e7eb;             /* ตัวอักษรหลัก */
-      --muted: #9aa4b2;            /* ตัวอักษรรอง */
-      --accent-1: #3b82f6;         /* น้ำเงินสด */
-      --accent-2: #8b5cf6;         /* ม่วงสด */
-      --tile: 56px;                /* จะถูกคำนวณใหม่ด้วย JS ให้พอดีกับจอ */
-      --gap: 8px;
-      --container-w: min(520px, 92vw);
-      --k-gap: 6px;
-
-      /* สี Wordle */
-      --correct: #22c55e;          /* เขียว */
-      --present: #eab308;          /* เหลือง */
-      --absent: #64748b;           /* เทาอมฟ้า */
-      --tile-border: #334155;      /* เส้นขอบช่องว่าง */
-      --tile-bg: #0f172a;          /* พื้นกระดาน */
-      --key-bg: #1f2937;           /* ปุ่มคีย์ปกติ */
-      --key-bg-hover: #273244;     /* hover */
-      --key-text: #e5e7eb;
+      --bg:#0b0f14; --bg-grad-1:#0b0f14; --bg-grad-2:#0f1620;
+      --panel:#111826; --panel-2:#0e1520; --border:#1f2937;
+      --text:#e5e7eb; --muted:#9aa4b2; --accent-1:#3b82f6; --accent-2:#8b5cf6;
+      --tile:56px; --gap:8px; --container-w:min(520px,92vw); --k-gap:6px;
+      --correct:#22c55e; --present:#eab308; --absent:#64748b;
+      --tile-border:#334155; --tile-bg:#0f172a; --key-bg:#1f2937; --key-bg-hover:#273244; --key-text:#e5e7eb;
     }
-
-    @media (prefers-color-scheme: dark){
-      :root{ /* คงเดิมเพราะตั้งค่ามืดเป็นค่าเริ่มต้นอยู่แล้ว */ }
-    }
-
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html{-webkit-text-size-adjust:100%}
     html,body{height:100%}
@@ -50,18 +25,16 @@
                   linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
       min-height:100dvh; display:flex; justify-content:center; align-items:center;
       padding:20px; padding-bottom:calc(20px + env(safe-area-inset-bottom));
-      color:var(--text); touch-action: manipulation;
+      color:var(--text); touch-action:manipulation;
     }
-
     .container{
       width:var(--container-w); background:var(--panel); border-radius:18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
+      box-shadow:0 20px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
       display:flex; flex-direction:column; max-height:calc(100dvh - 40px); overflow:hidden;
       border:1px solid var(--border);
     }
-
     header{
-      padding:14px 16px; border-bottom:1px solid var(--border); background:linear-gradient(180deg, #131c2b, #101723);
+      padding:14px 16px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#131c2b,#101723);
       display:flex; align-items:center; gap:10px; justify-content:space-between;
     }
     h1{font-size:1.2rem; font-weight:800; letter-spacing:.3px; color:#f3f4f6}
@@ -69,23 +42,12 @@
     label{font-size:14px;color:var(--muted);font-weight:700}
     select,button{
       border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--panel-2);
-      font-weight:700; cursor:pointer; color:var(--text); font-size:16px; /* >=16px กัน zoom */
-      outline:none;
+      font-weight:700; cursor:pointer; color:var(--text); font-size:16px; outline:none;
     }
-    select:focus, button:focus{ box-shadow:0 0 0 2px rgba(59,130,246,.35) }
-    button.primary{
-      background:linear-gradient(135deg, rgba(59,130,246,.9), rgba(139,92,246,.9));
-      color:#fff; border:none;
-    }
-    .subtitle{
-      padding:8px 16px; background:#0f1623; color:var(--muted); font-size:.95rem; border-bottom:1px solid var(--border)
-    }
-
-    .content{
-      display:flex; flex-direction:column; gap:12px;
-      padding:14px 12px; overflow:auto; background:linear-gradient(180deg,#0e1520 0%,#0b111a 100%);
-    }
-
+    select:focus,button:focus{ box-shadow:0 0 0 2px rgba(59,130,246,.35) }
+    button.primary{ background:linear-gradient(135deg, rgba(59,130,246,.9), rgba(139,92,246,.9)); color:#fff; border:none; }
+    .subtitle{ padding:8px 16px; background:#0f1623; color:var(--muted); font-size:.95rem; border-bottom:1px solid var(--border) }
+    .content{ display:flex; flex-direction:column; gap:12px; padding:14px 12px; overflow:auto; background:linear-gradient(180deg,#0e1520 0%,#0b111a 100%); }
     .game-board{display:flex; flex-direction:column; gap:var(--gap); align-items:center}
     .row{display:flex; gap:var(--gap); justify-content:center}
     .tile{
@@ -95,7 +57,7 @@
       font-weight:800; text-transform:uppercase; background:var(--tile-bg); color:#f8fafc;
       transition:transform .15s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
       user-select:none;
-      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 2px 8px rgba(0,0,0,.35);
+      box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 2px 8px rgba(0,0,0,.35);
     }
     .tile.filled{border-color:#60708a; animation:pop .09s ease}
     .tile.correct{background:var(--correct); border-color:var(--correct); color:#05130a}
@@ -104,27 +66,22 @@
     .tile.flip{animation:flip .45s ease}
     @keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
     @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
-
     .keyboard-wrap{
       position:sticky; bottom:0; background:linear-gradient(180deg,#0e1623,#0a0f17);
-      border-top:1px solid var(--border);
-      padding:10px 8px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
+      border-top:1px solid var(--border); padding:10px 8px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
     }
     .keyboard{display:flex; flex-direction:column; gap:var(--k-gap)}
     .keyboard-row{display:flex; gap:var(--k-gap); justify-content:center}
     .key{
       background:var(--key-bg); border:1px solid var(--border); border-radius:10px;
-      padding:10px; /* จะถูกคำนวณให้พอดีด้วย JS */
-      min-width:34px; min-height:44px;
-      font-size:16px; /* >=16px กัน zoom */
-      font-weight:800; color:var(--key-text); text-transform:uppercase; cursor:pointer;
-      user-select:none; touch-action: manipulation;
-      box-shadow: 0 2px 6px rgba(0,0,0,.35);
-      transition: transform .06s ease, background-color .15s ease, border-color .15s ease;
+      padding:10px; min-width:34px; min-height:44px;
+      font-size:16px; font-weight:800; color:var(--key-text); text-transform:uppercase; cursor:pointer;
+      user-select:none; touch-action:manipulation;
+      box-shadow:0 2px 6px rgba(0,0,0,.35);
+      transition:transform .06s ease, background-color .15s ease, border-color .15s ease;
     }
     .key:hover{ background:var(--key-bg-hover) }
     .key:active{ transform:scale(.97) }
-    .key.wide{} /* ความกว้างจะกำหนดด้วย JS */
     .key.correct{background:var(--correct); color:#05130a; border-color:#16a34a}
     .key.present{background:var(--present); color:#0d0c00; border-color:#ca8a04}
     .key.absent{background:var(--absent); color:#0b111a; border-color:#64748b}
@@ -133,7 +90,7 @@
       position:fixed; top:16px; left:50%; transform:translateX(-50%);
       background:#0b1220; color:#e5e7eb; padding:10px 14px; border-radius:10px; font-weight:800;
       display:none; z-index:10; border:1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+      box-shadow:0 10px 30px rgba(0,0,0,.5);
     }
     .message.show{display:block}
     .message.win{background:#052e13; border-color:#16a34a; color:#d1fae5}
@@ -178,13 +135,17 @@
 
     // STATE
     let LEVEL = localStorage.getItem('wordle-level') || 'C1';
-    let lastPickedLevel = LEVEL;   // สำหรับแสดงเมื่อสุ่ม Random
+    let lastPickedLevel = LEVEL;   // ระดับที่ใช้เป็น "เฉลย" (ถ้าเลือก Random จะสุ่ม)
     let targetWord = '';
     let currentGuess = '';
     let currentRow = 0;
     let isAnimating = false;
     let gameOver = false;
+
+    // รายการคำเฉลย (ตามระดับที่เล่น) และ "allowedSet" คือพจนานุกรมรวมทุกระดับ
     let wordList = [];
+    let allowedSet = new Set();
+    let allowedReady = false;
 
     // DOM
     const $ = (s)=>document.querySelector(s);
@@ -197,9 +158,9 @@
     const container = document.querySelector('.container');
 
     const keyboardLayout = [
-      ['Q','W','E','R','T','Y','U','I','O','P'],           // 10 ปุ่ม
-      ['A','S','D','F','G','H','J','K','L'],               // 9 ปุ่ม
-      ['ENTER','Z','X','C','V','B','N','M','BACK']         // 7 ปุ่ม + 2 ปุ่มกว้าง
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L'],
+      ['ENTER','Z','X','C','V','B','N','M','BACK']
     ];
 
     levelSel.value = LEVEL;
@@ -227,7 +188,7 @@
         }
         gameBoard.appendChild(row);
       }
-      resizeTiles(); // ปรับขนาดไทล์ให้พอดี
+      resizeTiles();
     }
 
     function createKeyboard(){
@@ -245,36 +206,29 @@
         });
         keyboard.appendChild(row);
       });
-      layoutKeyboardSizes(); // ปรับขนาดคีย์ให้พอดีแถว/จอ
+      layoutKeyboardSizes();
     }
 
-    // ====== ปรับ "ขนาดไทล์" ให้พอดีกับความกว้างคอนเทนเนอร์ ======
+    // ====== ปรับ "ขนาดไทล์" และคีย์บอร์ดให้พอดีจอ ======
     function resizeTiles(){
       const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap')) || 8;
-      const padH = 24; // padding ซ้าย/ขวารวมโดยประมาณของ content
+      const padH = 24;
       const boardWidth = container.clientWidth - padH;
       const t = Math.max(44, Math.min(62, Math.floor((boardWidth - (WORD_LENGTH-1)*gap)/WORD_LENGTH)));
       document.documentElement.style.setProperty('--tile', t+'px');
     }
-
-    // ====== จัด layout คีย์บอร์ดให้ "พอดีจอ" แบบไดนามิก ======
     function layoutKeyboardSizes(){
       const kGap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--k-gap')) || 6;
       const wrap = document.querySelector('.keyboard-wrap');
-      const wrapW = wrap.clientWidth - 16; // เผื่อ padding ซ้าย/ขวา
+      const wrapW = wrap.clientWidth - 16;
       const rows = Array.from(keyboard.children);
-
-      rows.forEach((row, idx)=>{
+      rows.forEach(row=>{
         const keys = Array.from(row.children);
-        // กำหนด "หน่วยความกว้าง" ต่อปุ่ม (ENTER/BACK กว้าง ~1.6 เท่าของปุ่มปกติ)
         const unit = (btn)=> btn.classList.contains('wide') ? 1.6 : 1.0;
         const totalUnits = keys.reduce((s,btn)=> s + unit(btn), 0);
         const gaps = (keys.length - 1) * kGap;
         let keyW = Math.floor((wrapW - gaps) / totalUnits);
-
-        // จำกัดช่วงความกว้างต่อปุ่มเพื่อความสวยงาม/สัมผัสง่าย
         keyW = Math.max(34, Math.min(92, keyW));
-
         keys.forEach(btn=>{
           const w = btn.classList.contains('wide') ? Math.floor(keyW*1.6) : keyW;
           btn.style.width = w+'px';
@@ -283,8 +237,46 @@
       });
     }
 
-    // โหลดคำตามระดับ (รองรับ Random)
-    async function loadWords(){
+    // ====== โหลด "allowedSet" (พจนานุกรมรวมทุกระดับ) ======
+    async function loadAllowedWords(){
+      // ถ้าเคยโหลดแล้ว ไม่ต้องโหลดซ้ำ
+      if (allowedReady) return;
+
+      const files = ['a2','b1','b2','c1'].map(l => `words-${l}.json?v=${Date.now()}`);
+      const fallbackDict = {
+        A2: ["ABOUT","AFTER","AGAIN","APPLE","BEACH","BLACK","BREAD","BRING","BROWN","CHAIR","DRINK","EARLY","GREEN","HEART","HOUSE","LEARN","LIGHT","LOCAL","MONEY","MONTH","MOUTH","MUSIC","NIGHT","OTHER","PLANT","RIGHT","SMALL","SMILE","SOUTH","SPACE","SPEAK","START","STONE","STUDY","SWEET","TABLE","TEACH","THEIR","THERE","THESE","THING","THINK","THOSE","THREE","TODAY","UNDER","WATER","WHERE","WHICH","WORLD","WRITE"],
+        B1: ["AWARE","BASIC","BEING","BREAK","CLEAR","DOUBT","ERROR","EXTRA","FAULT","FINAL","FOCUS","FORCE","FRAME","FRESH","FRONT","GIANT","GRADE","GRANT","GROUP","GUESS","HUMAN","IDEAL","IMAGE","INNER","ISSUE","LABEL","LARGE","LEAST","LEVEL","LIMIT","LOCAL","LOGIC","LUCKY","MAJOR","MATCH","MEDIA","METAL","MODEL","MOTOR","NOVEL","OCEAN","OFFER","OFTEN","PIECE","PILOT","PLACE","PLAIN","PLANT","PLATE","POINT","POWER","PRESS","PRICE","PRIME","PRINT","PRIOR","PRIZE","PROOF","PROVE","QUICK","QUIET","RADIO","RAISE","REACH","READY","REFER","RIGHT","RIVAL","RIVER","SCENE","SCORE","SENSE","SERVE","SHAPE","SHIFT","SHORT","SIGHT","SKILL","SMALL","SOLVE","SOUND","SPACE","SPEAK","SPEED","SPEND","STAFF","STAGE","STAND","STATE","STEEL","STICK","STILL","STONE","STORE","STORM","STORY","STYLE","SUPER","TABLE","TEETH","THEME","TITLE","TOUCH","TOUGH","TRACK","TRADE","TRAIN","TREND","TRIAL","TRUCK","TRUST","TRUTH","UNDER","UNION","UNTIL","URBAN","USUAL","VALUE","VISIT","VOCAL","VOICE","WATCH","WHOLE","WOMAN","YOUTH"],
+        B2: ["ACUTE","ADAPT","ALIGN","ALIVE","AMEND","ARISE","AVERT","BLEND","BRISK","CRISP","DENSE","ELITE","EQUAL","EQUIP","ETHIC","FEIGN","FLAIR","FLUID","FRAIL","FRAUD","GRASP","GRAVE","HASTE","IMPLY","IRATE","LEERY","LITHE","LOFTY","LUCID","NOBLE","OCCUR","OPTIC","OVERT","PIQUE","PLUSH","POISE","PRIOR","PRONE","PROXY","QUOTA","RIGID","ROGUE","SEVER","SHREW","SLACK","SOLEMN","SPAWN","SPIRE","SPURN","STARK","STEEP","STERN","SUAVE","SUITE","TANGY","TENSE","TERSE","TIDAL","TORCH","TRITE","VALET","VAUNT","VIGOR","VOGUE","WIELD","YIELD"],
+        C1: ["PITHY","LURID","BANAL","CAVIL","DEMUR","INANE","WRYLY","TERSE","TACIT","STOIC","TRITE","TEPID","VEXED","SLYLY","POSIT","GUILE","PRUDE","ROGUE","KNACK","PLAID","RIGOR","LITHE","LEERY","VIGOR","ICILY","DROLL","SURLY","RARER","TUMID","TURBO"]
+      };
+
+      try{
+        const resps = await Promise.all(files.map(f => fetch(f, {cache:'no-store'}).catch(()=>null)));
+        for (let i=0;i<resps.length;i++){
+          const r = resps[i];
+          if (r && r.ok){
+            const data = await r.json();
+            const arr = Array.isArray(data) ? data : (data.words || []);
+            arr.forEach(w=>{
+              const s = String(w).toUpperCase();
+              if (s.length===WORD_LENGTH && /^[A-Z]+$/.test(s)) allowedSet.add(s);
+            });
+          }
+        }
+        // ถ้ายังว่าง ให้ใช้ fallback
+        if (allowedSet.size === 0){
+          Object.values(fallbackDict).flat().forEach(w=>allowedSet.add(w));
+        }
+        allowedReady = true;
+      }catch(e){
+        // fallback กรณีโหลดล้มเหลว
+        Object.values(fallbackDict).flat().forEach(w=>allowedSet.add(w));
+        allowedReady = true;
+      }
+    }
+
+    // ====== โหลด "คำเฉลย" ตามระดับที่เล่น (แต่ validate ด้วย allowedSet รวม) ======
+    async function loadAnswerList(){
       let pickLevel = LEVEL;
       if (LEVEL === 'RANDOM') {
         const levels = ['A2','B1','B2','C1'];
@@ -302,7 +294,7 @@
                       .filter(w=>w.length===WORD_LENGTH && /^[A-Z]+$/.test(w));
         if (!wordList.length) throw new Error('Empty list');
       }catch(err){
-        // fallback เริ่มต้นเผื่อยังไม่วางไฟล์ JSON
+        // fallback เฉพาะรายการของระดับนั้น
         const fallback = {
           A2: ["ABOUT","AFTER","AGAIN","APPLE","BEACH","BLACK","BREAD","BRING","BROWN","CHAIR","DRINK","EARLY","GREEN","HEART","HOUSE","LEARN","LIGHT","LOCAL","MONEY","MONTH","MOUTH","MUSIC","NIGHT","OTHER","PLANT","RIGHT","SMALL","SMILE","SOUTH","SPACE","SPEAK","START","STONE","STUDY","SWEET","TABLE","TEACH","THEIR","THERE","THESE","THING","THINK","THOSE","THREE","TODAY","UNDER","WATER","WHERE","WHICH","WORLD","WRITE"],
           B1: ["AWARE","BASIC","BEING","BREAK","CLEAR","DOUBT","ERROR","EXTRA","FAULT","FINAL","FOCUS","FORCE","FRAME","FRESH","FRONT","GIANT","GRADE","GRANT","GROUP","GUESS","HUMAN","IDEAL","IMAGE","INNER","ISSUE","LABEL","LARGE","LEAST","LEVEL","LIMIT","LOCAL","LOGIC","LUCKY","MAJOR","MATCH","MEDIA","METAL","MODEL","MOTOR","NOVEL","OCEAN","OFFER","OFTEN","PIECE","PILOT","PLACE","PLAIN","PLANT","PLATE","POINT","POWER","PRESS","PRICE","PRIME","PRINT","PRIOR","PRIZE","PROOF","PROVE","QUICK","QUIET","RADIO","RAISE","REACH","READY","REFER","RIGHT","RIVAL","RIVER","SCENE","SCORE","SENSE","SERVE","SHAPE","SHIFT","SHORT","SIGHT","SKILL","SMALL","SOLVE","SOUND","SPACE","SPEAK","SPEED","SPEND","STAFF","STAGE","STAND","STATE","STEEL","STICK","STILL","STONE","STORE","STORM","STORY","STYLE","SUPER","TABLE","TEETH","THEME","TITLE","TOUCH","TOUGH","TRACK","TRADE","TRAIN","TREND","TRIAL","TRUCK","TRUST","TRUTH","UNDER","UNION","UNTIL","URBAN","USUAL","VALUE","VISIT","VOCAL","VOICE","WATCH","WHOLE","WOMAN","YOUTH"],
@@ -313,7 +305,7 @@
       }
 
       targetWord = wordList[Math.floor(Math.random()*wordList.length)];
-      console.log('คำที่ต้องทาย:', targetWord, '(ระดับ:', lastPickedLevel, ')');
+      console.log('คำที่ต้องทาย:', targetWord, '(ระดับเฉลย:', lastPickedLevel, ')');
     }
 
     function handleKey(key){
@@ -329,8 +321,9 @@
         if (currentGuess.length!==WORD_LENGTH){
           showMessage(`กรุณากรอกคำให้ครบ ${WORD_LENGTH} ตัวอักษร`); return;
         }
-        if (!wordList.includes(currentGuess)){
-          showMessage('ไม่มีคำนี้ในรายการ'); return;
+        // ใช้ "allowedSet รวมทุกระดับ" ตรวจความถูกต้อง
+        if (allowedReady && !allowedSet.has(currentGuess)){
+          showMessage('คำนี้ไม่อยู่ในพจนานุกรม รวมทุกระดับ'); return;
         }
         checkGuess();
         return;
@@ -354,7 +347,6 @@
     function checkGuess(){
       const guess = currentGuess;
       const target = targetWord;
-
       const counts = {};
       for (const ch of target) counts[ch] = (counts[ch]||0)+1;
       const results = Array(WORD_LENGTH).fill('absent');
@@ -362,18 +354,14 @@
       // correct
       for (let i=0;i<WORD_LENGTH;i++){
         if (guess[i]===target[i]){
-          results[i]='correct';
-          counts[guess[i]]--;
+          results[i]='correct'; counts[guess[i]]--;
         }
       }
       // present
       for (let i=0;i<WORD_LENGTH;i++){
         if (results[i]==='correct') continue;
         const ch = guess[i];
-        if (counts[ch]>0){
-          results[i]='present';
-          counts[ch]--;
-        }
+        if (counts[ch]>0){ results[i]='present'; counts[ch]--; }
       }
 
       isAnimating = true;
@@ -392,15 +380,14 @@
       setTimeout(()=>{
         if (guess===target){
           gameOver = true;
-          showMessage('🎉 เก่งมากก! คุณครูจ๋าทายถูกแล้ว','win');
+          showMessage('🎉 ยินดีด้วย! ทายถูกแล้ว','win');
           updateStats(`คุณทายถูกใน ${currentRow+1} ครั้ง`);
         } else if (currentRow===MAX_GUESSES-1){
           gameOver = true;
           showMessage(`คำที่ถูกต้องคือ: ${target}`,'lose');
           updateStats('ลองใหม่อีกครั้ง!');
         } else {
-          currentRow++;
-          currentGuess='';
+          currentRow++; currentGuess='';
         }
         isAnimating = false;
       }, doneAt);
@@ -424,12 +411,11 @@
       clearTimeout(showMessage._t);
       showMessage._t = setTimeout(()=> message.classList.remove('show'), 2400);
     }
-
     function updateStats(text){ stats.textContent = text; }
 
-    async function newGame(force=false){
+    async function newGame(){
       currentGuess=''; currentRow=0; gameOver=false; isAnimating=false;
-      await loadWords();
+      await Promise.all([loadAllowedWords(), loadAnswerList()]);
       setSubtitle();
       createBoard();
       createKeyboard();
