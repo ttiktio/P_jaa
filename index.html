@@ -1,94 +1,144 @@
-<!-- index.html -->
+<!-- index.html (Dark Mode, Mobile-friendly, A2–C1 + Random) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- ป้องกันซูมอัตโนมัติ/ดับเบิลแท็ปซูมบนมือถือ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Wordle - เกมทายคำ (A2–C1 + Random)</title>
   <style>
     :root{
-      --tile: clamp(44px, 10.5vw, 60px);
+      /* โทนมืดสมัยใหม่ */
+      --bg: #0b0f14;               /* พื้นหลังหลัก */
+      --bg-grad-1: #0b0f14;
+      --bg-grad-2: #0f1620;
+      --panel: #111826;            /* แผง/การ์ด */
+      --panel-2: #0e1520;
+      --border: #1f2937;           /* เส้นขอบ */
+      --text: #e5e7eb;             /* ตัวอักษรหลัก */
+      --muted: #9aa4b2;            /* ตัวอักษรรอง */
+      --accent-1: #3b82f6;         /* น้ำเงินสด */
+      --accent-2: #8b5cf6;         /* ม่วงสด */
+      --tile: 56px;                /* จะถูกคำนวณใหม่ด้วย JS ให้พอดีกับจอ */
       --gap: 8px;
       --container-w: min(520px, 92vw);
+      --k-gap: 6px;
+
+      /* สี Wordle */
+      --correct: #22c55e;          /* เขียว */
+      --present: #eab308;          /* เหลือง */
+      --absent: #64748b;           /* เทาอมฟ้า */
+      --tile-border: #334155;      /* เส้นขอบช่องว่าง */
+      --tile-bg: #0f172a;          /* พื้นกระดาน */
+      --key-bg: #1f2937;           /* ปุ่มคีย์ปกติ */
+      --key-bg-hover: #273244;     /* hover */
+      --key-text: #e5e7eb;
     }
+
+    @media (prefers-color-scheme: dark){
+      :root{ /* คงเดิมเพราะตั้งค่ามืดเป็นค่าเริ่มต้นอยู่แล้ว */ }
+    }
+
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{-webkit-text-size-adjust:100%}
     html,body{height:100%}
     body{
       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      min-height:100vh;display:flex;justify-content:center;align-items:center;
+      background: radial-gradient(1200px 600px at 15% -10%, rgba(59,130,246,.15), transparent 60%),
+                  radial-gradient(1200px 700px at 85% 110%, rgba(139,92,246,.13), transparent 60%),
+                  linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+      min-height:100dvh; display:flex; justify-content:center; align-items:center;
       padding:20px; padding-bottom:calc(20px + env(safe-area-inset-bottom));
-      color:#1f2937;
+      color:var(--text); touch-action: manipulation;
     }
+
     .container{
-      width:var(--container-w); background:#fff; border-radius:20px;
-      box-shadow:0 20px 60px rgba(0,0,0,.3); display:flex; flex-direction:column;
-      max-height:calc(100vh - 40px); overflow:hidden;
+      width:var(--container-w); background:var(--panel); border-radius:18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
+      display:flex; flex-direction:column; max-height:calc(100dvh - 40px); overflow:hidden;
+      border:1px solid var(--border);
     }
+
     header{
-      padding:14px 16px; border-bottom:1px solid #e5e7eb; background:#fff;
+      padding:14px 16px; border-bottom:1px solid var(--border); background:linear-gradient(180deg, #131c2b, #101723);
       display:flex; align-items:center; gap:10px; justify-content:space-between;
     }
-    h1{font-size:1.4rem; font-weight:800; letter-spacing:.3px; color:#111827}
+    h1{font-size:1.2rem; font-weight:800; letter-spacing:.3px; color:#f3f4f6}
     .controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    label{font-size:14px;color:var(--muted);font-weight:700}
     select,button{
-      border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; background:#f9fafb;
-      font-weight:600; cursor:pointer; color:#111827;
+      border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--panel-2);
+      font-weight:700; cursor:pointer; color:var(--text); font-size:16px; /* >=16px กัน zoom */
+      outline:none;
     }
+    select:focus, button:focus{ box-shadow:0 0 0 2px rgba(59,130,246,.35) }
     button.primary{
-      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; border:none;
+      background:linear-gradient(135deg, rgba(59,130,246,.9), rgba(139,92,246,.9));
+      color:#fff; border:none;
     }
     .subtitle{
-      padding:8px 16px; background:#fafafa; color:#6b7280; font-size:.9rem; border-bottom:1px solid #f1f5f9
+      padding:8px 16px; background:#0f1623; color:var(--muted); font-size:.95rem; border-bottom:1px solid var(--border)
     }
+
     .content{
       display:flex; flex-direction:column; gap:12px;
-      padding:14px 12px; overflow:auto;
+      padding:14px 12px; overflow:auto; background:linear-gradient(180deg,#0e1520 0%,#0b111a 100%);
     }
+
     .game-board{display:flex; flex-direction:column; gap:var(--gap); align-items:center}
     .row{display:flex; gap:var(--gap); justify-content:center}
     .tile{
       width:var(--tile); height:var(--tile);
-      border:2px solid #d3d6da; border-radius:8px;
+      border:2px solid var(--tile-border); border-radius:10px;
       display:grid; place-items:center; font-size:calc(var(--tile) * .38);
-      font-weight:800; text-transform:uppercase; background:#fff; color:#111827;
-      transition:transform .15s ease, background-color .2s ease, border-color .2s ease;
+      font-weight:800; text-transform:uppercase; background:var(--tile-bg); color:#f8fafc;
+      transition:transform .15s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
       user-select:none;
+      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 2px 8px rgba(0,0,0,.35);
     }
-    .tile.filled{border-color:#878a8c; animation:pop .09s ease}
-    .tile.correct{background:#6aaa64; border-color:#6aaa64; color:#fff}
-    .tile.present{background:#c9b458; border-color:#c9b458; color:#fff}
-    .tile.absent{background:#787c7e; border-color:#787c7e; color:#fff}
+    .tile.filled{border-color:#60708a; animation:pop .09s ease}
+    .tile.correct{background:var(--correct); border-color:var(--correct); color:#05130a}
+    .tile.present{background:var(--present); border-color:var(--present); color:#0d0c00}
+    .tile.absent{background:var(--absent); border-color:var(--absent); color:#0b111a}
     .tile.flip{animation:flip .45s ease}
     @keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
     @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+
     .keyboard-wrap{
-      position:sticky; bottom:0; background:#fff; border-top:1px solid #e5e7eb;
+      position:sticky; bottom:0; background:linear-gradient(180deg,#0e1623,#0a0f17);
+      border-top:1px solid var(--border);
       padding:10px 8px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
     }
-    .keyboard{display:flex; flex-direction:column; gap:8px}
-    .keyboard-row{display:flex; gap:6px; justify-content:center}
+    .keyboard{display:flex; flex-direction:column; gap:var(--k-gap)}
+    .keyboard-row{display:flex; gap:var(--k-gap); justify-content:center}
     .key{
-      background:#e5e7eb; border:none; border-radius:8px;
-      padding:clamp(10px,2.5vw,14px); min-width:clamp(34px, 8.5vw, 46px);
-      font-size:.95rem; font-weight:800; color:#111827; text-transform:uppercase; cursor:pointer;
-      user-select:none;
+      background:var(--key-bg); border:1px solid var(--border); border-radius:10px;
+      padding:10px; /* จะถูกคำนวณให้พอดีด้วย JS */
+      min-width:34px; min-height:44px;
+      font-size:16px; /* >=16px กัน zoom */
+      font-weight:800; color:var(--key-text); text-transform:uppercase; cursor:pointer;
+      user-select:none; touch-action: manipulation;
+      box-shadow: 0 2px 6px rgba(0,0,0,.35);
+      transition: transform .06s ease, background-color .15s ease, border-color .15s ease;
     }
-    .key:active{transform:scale(.97)}
-    .key.wide{min-width:clamp(64px, 18vw, 90px); font-size:.9rem}
-    .key.correct{background:#6aaa64; color:#fff}
-    .key.present{background:#c9b458; color:#fff}
-    .key.absent{background:#787c7e; color:#fff}
-    .stats{ text-align:center; color:#6b7280; font-size:.92rem; padding:8px 12px 2px }
+    .key:hover{ background:var(--key-bg-hover) }
+    .key:active{ transform:scale(.97) }
+    .key.wide{} /* ความกว้างจะกำหนดด้วย JS */
+    .key.correct{background:var(--correct); color:#05130a; border-color:#16a34a}
+    .key.present{background:var(--present); color:#0d0c00; border-color:#ca8a04}
+    .key.absent{background:var(--absent); color:#0b111a; border-color:#64748b}
+    .stats{ text-align:center; color:var(--muted); font-size:.95rem; padding:8px 12px 2px }
     .message{
       position:fixed; top:16px; left:50%; transform:translateX(-50%);
-      background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-weight:700;
-      display:none; z-index:10;
+      background:#0b1220; color:#e5e7eb; padding:10px 14px; border-radius:10px; font-weight:800;
+      display:none; z-index:10; border:1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
     }
     .message.show{display:block}
-    .message.win{background:#6aaa64}
-    .message.lose{background:#ef4444}
-    @media (max-width:420px){ h1{font-size:1.2rem} }
+    .message.win{background:#052e13; border-color:#16a34a; color:#d1fae5}
+    .message.lose{background:#2a0b0b; border-color:#b91c1c; color:#fee2e2}
+    @media (max-width:420px){ h1{font-size:1.05rem} }
   </style>
 </head>
 <body>
@@ -96,7 +146,7 @@
     <header>
       <h1>WORDLE (A2–C1)</h1>
       <div class="controls">
-        <label for="levelSel" style="font-size:.9rem;color:#6b7280;font-weight:700;">ระดับ</label>
+        <label for="levelSel">ระดับ</label>
         <select id="levelSel" aria-label="เลือกระดับคำศัพท์">
           <option value="RANDOM">Random</option>
           <option value="A2">A2</option>
@@ -144,11 +194,12 @@
     const stats = $('#stats');
     const subtitle = $('#subtitle');
     const levelSel = $('#levelSel');
+    const container = document.querySelector('.container');
 
     const keyboardLayout = [
-      ['Q','W','E','R','T','Y','U','I','O','P'],
-      ['A','S','D','F','G','H','J','K','L'],
-      ['ENTER','Z','X','C','V','B','N','M','BACK']
+      ['Q','W','E','R','T','Y','U','I','O','P'],           // 10 ปุ่ม
+      ['A','S','D','F','G','H','J','K','L'],               // 9 ปุ่ม
+      ['ENTER','Z','X','C','V','B','N','M','BACK']         // 7 ปุ่ม + 2 ปุ่มกว้าง
     ];
 
     levelSel.value = LEVEL;
@@ -160,7 +211,6 @@
     });
 
     function setSubtitle(){
-      // ถ้าโหมด Random จะแจ้งวงเล็บระดับที่สุ่มได้ด้วย
       const lvText = (LEVEL==='RANDOM') ? `RANDOM (รอบนี้: ${lastPickedLevel})` : LEVEL;
       subtitle.textContent = `ทายคำภาษาอังกฤษ ${WORD_LENGTH} ตัวอักษร • ระดับ: ${lvText} • โอกาส ${MAX_GUESSES} ครั้ง`;
     }
@@ -177,6 +227,7 @@
         }
         gameBoard.appendChild(row);
       }
+      resizeTiles(); // ปรับขนาดไทล์ให้พอดี
     }
 
     function createKeyboard(){
@@ -189,15 +240,51 @@
           btn.className='key'; btn.textContent = (k==='BACK'?'⌫':k);
           btn.id=`key-${k}`;
           if (k==='ENTER' || k==='BACK') btn.classList.add('wide');
-          btn.addEventListener('click', ()=> handleKey(k));
+          btn.addEventListener('click', ()=> handleKey(k), {passive:true});
           row.appendChild(btn);
         });
         keyboard.appendChild(row);
       });
+      layoutKeyboardSizes(); // ปรับขนาดคีย์ให้พอดีแถว/จอ
     }
 
+    // ====== ปรับ "ขนาดไทล์" ให้พอดีกับความกว้างคอนเทนเนอร์ ======
+    function resizeTiles(){
+      const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap')) || 8;
+      const padH = 24; // padding ซ้าย/ขวารวมโดยประมาณของ content
+      const boardWidth = container.clientWidth - padH;
+      const t = Math.max(44, Math.min(62, Math.floor((boardWidth - (WORD_LENGTH-1)*gap)/WORD_LENGTH)));
+      document.documentElement.style.setProperty('--tile', t+'px');
+    }
+
+    // ====== จัด layout คีย์บอร์ดให้ "พอดีจอ" แบบไดนามิก ======
+    function layoutKeyboardSizes(){
+      const kGap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--k-gap')) || 6;
+      const wrap = document.querySelector('.keyboard-wrap');
+      const wrapW = wrap.clientWidth - 16; // เผื่อ padding ซ้าย/ขวา
+      const rows = Array.from(keyboard.children);
+
+      rows.forEach((row, idx)=>{
+        const keys = Array.from(row.children);
+        // กำหนด "หน่วยความกว้าง" ต่อปุ่ม (ENTER/BACK กว้าง ~1.6 เท่าของปุ่มปกติ)
+        const unit = (btn)=> btn.classList.contains('wide') ? 1.6 : 1.0;
+        const totalUnits = keys.reduce((s,btn)=> s + unit(btn), 0);
+        const gaps = (keys.length - 1) * kGap;
+        let keyW = Math.floor((wrapW - gaps) / totalUnits);
+
+        // จำกัดช่วงความกว้างต่อปุ่มเพื่อความสวยงาม/สัมผัสง่าย
+        keyW = Math.max(34, Math.min(92, keyW));
+
+        keys.forEach(btn=>{
+          const w = btn.classList.contains('wide') ? Math.floor(keyW*1.6) : keyW;
+          btn.style.width = w+'px';
+          btn.style.padding = Math.round(Math.max(10, Math.min(16, w*0.28))) + 'px';
+        });
+      });
+    }
+
+    // โหลดคำตามระดับ (รองรับ Random)
     async function loadWords(){
-      // โหมดสุ่ม: สุ่มระดับหนึ่งครั้ง/ต่อเกม
       let pickLevel = LEVEL;
       if (LEVEL === 'RANDOM') {
         const levels = ['A2','B1','B2','C1'];
@@ -305,7 +392,7 @@
       setTimeout(()=>{
         if (guess===target){
           gameOver = true;
-          showMessage('🎉 ยินดีด้วย! คุณครูจ๋าเก่งมากก!!','win');
+          showMessage('🎉 เก่งมากก! คุณครูจ๋าทายถูกแล้ว','win');
           updateStats(`คุณทายถูกใน ${currentRow+1} ครั้ง`);
         } else if (currentRow===MAX_GUESSES-1){
           gameOver = true;
@@ -341,7 +428,6 @@
     function updateStats(text){ stats.textContent = text; }
 
     async function newGame(force=false){
-      // reset
       currentGuess=''; currentRow=0; gameOver=false; isAnimating=false;
       await loadWords();
       setSubtitle();
@@ -350,6 +436,12 @@
       updateStats('พิมพ์หรือแตะปุ่มเพื่อเริ่มเล่น');
     }
 
+    // ปรับขนาดเมื่อหน้าจอเปลี่ยน/หมุน
+    const ro = new ResizeObserver(()=>{ resizeTiles(); layoutKeyboardSizes(); });
+    ro.observe(document.body);
+    window.addEventListener('orientationchange', ()=>{ setTimeout(()=>{ resizeTiles(); layoutKeyboardSizes(); }, 250); });
+
+    // คีย์บอร์ดจริง
     document.addEventListener('keydown',(e)=>{
       const k = e.key.toUpperCase();
       if (k==='BACKSPACE') handleKey('BACK');
