@@ -452,7 +452,7 @@
       setTimeout(()=>{
         if (guess===target){
           gameOver = true;
-          showMessage('🎉 เก่งมากครับ!! ครูจ๋าถูกแล้ว','win');
+          showMessage('🎉 เก่งมากครับ!! ทายถูกแล้ว','win');
           updateStats(`คุณทายถูกใน ${currentRow+1} ครั้ง`);
         } else if (currentRow===MAX_GUESSES-1){
           gameOver = true;
@@ -523,4 +523,5 @@
   </script>
 </body>
 </html>
+
 
