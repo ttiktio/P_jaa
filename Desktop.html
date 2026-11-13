@@ -1,0 +1,4234 @@
+<!doctype html>
+<html lang="en" data-theme="obsidian" data-wallpaper="aurora" data-scale="default" data-motion="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NEXUS OS</title>
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-surface: rgba(16, 22, 35, 0.86);
+      --bg-surface-solid: #111827;
+      --bg-elevated: #182235;
+      --bg-subtle: rgba(255, 255, 255, 0.045);
+      --bg-hover: rgba(255, 255, 255, 0.085);
+      --bg-active: rgba(56, 189, 248, 0.16);
+      --border: rgba(148, 163, 184, 0.18);
+      --border-strong: rgba(148, 163, 184, 0.34);
+      --ink: #f1f5f9;
+      --ink-secondary: #cbd5e1;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-strong: #0284c7;
+      --accent-ink: #06131f;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --shadow-win: 0 22px 54px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      --shadow-win-active: 0 28px 68px rgba(0, 0, 0, 0.74), 0 0 0 1px var(--accent);
+      --shadow-menu: 0 18px 42px rgba(0, 0, 0, 0.62);
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-sm: 6px;
+      --taskbar-h: 52px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --fs-base: 14px;
+      --blur: blur(18px);
+      --transition: 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    html[data-theme="violet"] {
+      --bg-base: #0d0a19;
+      --bg-surface: rgba(22, 17, 40, 0.88);
+      --bg-surface-solid: #17122b;
+      --bg-elevated: #221a3f;
+      --bg-active: rgba(167, 139, 250, 0.18);
+      --accent: #a78bfa;
+      --accent-strong: #7c3aed;
+      --accent-ink: #110826;
+    }
+
+    html[data-theme="emerald"] {
+      --bg-base: #071310;
+      --bg-surface: rgba(12, 27, 23, 0.88);
+      --bg-surface-solid: #0e201b;
+      --bg-elevated: #152e27;
+      --bg-active: rgba(52, 211, 153, 0.17);
+      --accent: #34d399;
+      --accent-strong: #059669;
+      --accent-ink: #041b13;
+    }
+
+    html[data-theme="amber"] {
+      --bg-base: #120e09;
+      --bg-surface: rgba(28, 22, 15, 0.88);
+      --bg-surface-solid: #1a140e;
+      --bg-elevated: #261d14;
+      --bg-active: rgba(251, 191, 36, 0.17);
+      --accent: #fbbf24;
+      --accent-strong: #d97706;
+      --accent-ink: #1c1103;
+    }
+
+    html[data-theme="daylight"] {
+      --bg-base: #e2e8f0;
+      --bg-surface: rgba(255, 255, 255, 0.88);
+      --bg-surface-solid: #ffffff;
+      --bg-elevated: #f1f5f9;
+      --bg-subtle: rgba(15, 23, 42, 0.045);
+      --bg-hover: rgba(15, 23, 42, 0.08);
+      --bg-active: rgba(2, 132, 199, 0.14);
+      --border: rgba(15, 23, 42, 0.14);
+      --border-strong: rgba(15, 23, 42, 0.28);
+      --ink: #0f172a;
+      --ink-secondary: #334155;
+      --muted: #64748b;
+      --accent: #0284c7;
+      --accent-strong: #0369a1;
+      --accent-ink: #ffffff;
+      --danger: #dc2626;
+      --success: #059669;
+      --warning: #d97706;
+      --shadow-win: 0 18px 42px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.08);
+      --shadow-win-active: 0 24px 56px rgba(15, 23, 42, 0.26), 0 0 0 1.5px var(--accent);
+      --shadow-menu: 0 14px 34px rgba(15, 23, 42, 0.18);
+    }
+
+    html[data-scale="small"] { --fs-base: 13px; }
+    html[data-scale="large"] { --fs-base: 15.5px; }
+    html[data-motion="reduced"] * {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      font-size: var(--fs-base);
+      color: var(--ink);
+      background: var(--bg-base);
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    #os-root {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Wallpapers */
+    html[data-wallpaper="aurora"] #desktop {
+      background:
+        radial-gradient(circle at 18% 20%, rgba(56, 189, 248, 0.22), transparent 46%),
+        radial-gradient(circle at 82% 26%, rgba(139, 92, 246, 0.20), transparent 48%),
+        radial-gradient(circle at 52% 85%, rgba(16, 185, 129, 0.15), transparent 52%),
+        linear-gradient(160deg, var(--bg-base) 0%, #0f172a 100%);
+    }
+
+    html[data-theme="daylight"][data-wallpaper="aurora"] #desktop {
+      background:
+        radial-gradient(circle at 20% 22%, rgba(56, 189, 248, 0.28), transparent 48%),
+        radial-gradient(circle at 82% 25%, rgba(99, 102, 241, 0.22), transparent 50%),
+        linear-gradient(160deg, #dbeafe 0%, #f1f5f9 100%);
+    }
+
+    html[data-wallpaper="grid"] #desktop {
+      background-color: var(--bg-base);
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.14), transparent 60%);
+      background-size: 36px 36px, 36px 36px, 100% 100%;
+    }
+
+    html[data-wallpaper="mesh"] #desktop {
+      background:
+        conic-gradient(from 210deg at 65% 40%, rgba(56, 189, 248, 0.16), rgba(99, 102, 241, 0.13), rgba(20, 184, 166, 0.15), rgba(56, 189, 248, 0.16)),
+        var(--bg-base);
+    }
+
+    html[data-wallpaper="matte"] #desktop {
+      background: var(--bg-base);
+    }
+
+    /* Desktop Surface */
+    #desktop {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: calc(100% - var(--taskbar-h));
+      overflow: hidden;
+    }
+
+    #desktop-watermark {
+      position: absolute;
+      right: 24px;
+      bottom: 20px;
+      pointer-events: none;
+      text-align: right;
+      opacity: 0.34;
+    }
+    #desktop-watermark .wm-brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+    }
+    #desktop-watermark .wm-sub {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    #desktop-icons {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      bottom: 16px;
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(auto-fill, 92px);
+      grid-auto-columns: 92px;
+      gap: 8px;
+      align-content: start;
+      z-index: 1;
+    }
+
+    .desktop-icon {
+      width: 88px;
+      height: 88px;
+      padding: 8px 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .desktop-icon:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    html[data-theme="daylight"] .desktop-icon:hover {
+      background: rgba(15, 23, 42, 0.07);
+      border-color: rgba(15, 23, 42, 0.14);
+    }
+    .desktop-icon.selected, .desktop-icon:focus-visible {
+      background: var(--bg-active);
+      border-color: var(--accent);
+    }
+    .desktop-icon-glyph {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .desktop-icon-label {
+      font-size: 12px;
+      line-height: 1.25;
+      max-width: 80px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.68);
+    }
+    html[data-theme="daylight"] .desktop-icon-label {
+      text-shadow: none;
+      font-weight: 500;
+    }
+
+    /* Snap Preview Overlay */
+    #snap-preview {
+      position: absolute;
+      z-index: 9000;
+      pointer-events: none;
+      border: 2px solid var(--accent);
+      background: var(--bg-active);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(6px);
+      transition: all 120ms ease;
+      display: none;
+    }
+    #snap-preview.visible { display: block; }
+
+    /* Prevent iframes from swallowing pointer events during drag/resize */
+    body.is-interacting-window iframe {
+      pointer-events: none !important;
+    }
+
+    /* Windows */
+    #windows-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .os-window {
+      position: absolute;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-win);
+      overflow: hidden;
+      min-width: 300px;
+      min-height: 220px;
+      transition: box-shadow 140ms ease, opacity 140ms ease, transform 140ms ease;
+    }
+    .os-window.focused {
+      box-shadow: var(--shadow-win-active);
+    }
+    .os-window.minimized {
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      pointer-events: none;
+    }
+    .os-window.maximized {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0;
+      border-width: 0 0 1px 0;
+    }
+
+    .win-titlebar {
+      height: 40px;
+      padding: 0 10px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      cursor: grab;
+      flex-shrink: 0;
+      touch-action: none;
+    }
+    .win-titlebar:active { cursor: grabbing; }
+    .win-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+    .win-app-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .win-title {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .win-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .win-ctrl-btn {
+      width: 28px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .win-ctrl-btn:hover {
+      background: var(--bg-hover);
+      color: var(--ink);
+    }
+    .win-ctrl-btn.close:hover {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .win-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface-solid);
+      overflow: hidden;
+      user-select: text;
+    }
+
+    /* 8-Way Resize Handles */
+    .resize-handle {
+      position: absolute;
+      z-index: 5;
+      touch-action: none;
+    }
+    .os-window.maximized .resize-handle { display: none; }
+    .rh-n { top: -3px; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
+    .rh-s { bottom: -3px; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
+    .rh-e { right: -3px; top: 8px; bottom: 8px; width: 6px; cursor: ew-resize; }
+    .rh-w { left: -3px; top: 8px; bottom: 8px; width: 6px; cursor: ew-resize; }
+    .rh-ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: nesw-resize; }
+    .rh-nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nwse-resize; }
+    .rh-se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: nwse-resize; }
+    .rh-sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: nesw-resize; }
+
+    /* Toast Notification */
+    #os-toast {
+      position: fixed;
+      right: 16px;
+      bottom: calc(var(--taskbar-h) + 14px);
+      z-index: 9700;
+      padding: 9px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-menu);
+      font-size: 12.5px;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+    #os-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Taskbar */
+    #taskbar {
+      height: var(--taskbar-h);
+      width: 100%;
+      background: var(--bg-surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      gap: 10px;
+      z-index: 9500;
+      flex-shrink: 0;
+    }
+
+    .tb-left, .tb-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    #start-btn {
+      height: 38px;
+      padding: 0 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    #start-btn:hover, #start-btn[aria-expanded="true"] {
+      background: var(--bg-active);
+      border-color: var(--accent);
+    }
+    .nexus-mark {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-ink);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    #tb-windows {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 2px 0;
+    }
+    #tb-windows::-webkit-scrollbar { display: none; }
+
+    .tb-win-btn {
+      position: relative;
+      height: 36px;
+      max-width: 195px;
+      min-width: 42px;
+      padding: 0 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      flex-shrink: 0;
+    }
+    .tb-win-btn:hover {
+      background: var(--bg-hover);
+      color: var(--ink);
+    }
+    .tb-win-btn.active {
+      background: var(--bg-active);
+      border-color: var(--border-strong);
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .tb-win-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      left: 26%;
+      right: 26%;
+      height: 2.5px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+    .tb-win-btn.minimized { opacity: 0.68; }
+    .tb-win-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tb-tray-btn {
+      height: 36px;
+      padding: 0 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--ink-secondary);
+      font-size: 12px;
+      transition: background var(--transition);
+    }
+    .tb-tray-btn:hover {
+      background: var(--bg-hover);
+      color: var(--ink);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    #tb-clock { text-align: right; line-height: 1.2; }
+    #tb-clock-time { font-weight: 600; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+    #tb-clock-date { font-size: 11px; color: var(--muted); }
+
+    /* Start Menu */
+    #start-menu {
+      position: absolute;
+      left: 10px;
+      bottom: calc(var(--taskbar-h) + 8px);
+      width: min(470px, calc(100vw - 20px));
+      max-height: calc(100vh - var(--taskbar-h) - 24px);
+      background: var(--bg-surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-menu);
+      z-index: 9600;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #start-menu.open { display: flex; }
+    .sm-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sm-search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .sm-search-input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      font-size: 13px;
+    }
+    .sm-search-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--muted);
+      pointer-events: none;
+      display: flex;
+    }
+    .sm-content {
+      padding: 12px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .sm-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .sm-app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+      gap: 8px;
+    }
+    .sm-app-card {
+      padding: 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .sm-app-card:hover {
+      background: var(--bg-active);
+      border-color: var(--accent);
+    }
+    .sm-app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sm-app-meta { min-width: 0; }
+    .sm-app-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sm-app-desc {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sm-places {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .sm-place-chip {
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sm-place-chip:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+    .sm-footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .sm-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-secondary);
+      font-weight: 500;
+    }
+    .sm-footer-actions { display: flex; gap: 6px; }
+
+    /* Context Menu */
+    #context-menu {
+      position: fixed;
+      z-index: 9800;
+      min-width: 215px;
+      padding: 5px;
+      background: var(--bg-surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-menu);
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+    #context-menu.open { display: flex; }
+    .ctx-item {
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      text-align: left;
+      font-size: 12.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--ink);
+    }
+    .ctx-item:hover { background: var(--bg-active); }
+    .ctx-item.danger:hover {
+      background: rgba(248, 113, 113, 0.2);
+      color: var(--danger);
+    }
+    .ctx-sep {
+      height: 1px;
+      background: var(--border);
+      margin: 3px 4px;
+    }
+    .ctx-kbd {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Shared App Controls */
+    .btn {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .btn:hover:not(:disabled) {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 600;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #ffffff;
+    }
+    .btn-danger {
+      border-color: rgba(248, 113, 113, 0.4);
+      color: var(--danger);
+    }
+    .btn-danger:hover:not(:disabled) {
+      background: rgba(248, 113, 113, 0.16);
+    }
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .input {
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-size: 12.5px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--ink-secondary);
+    }
+    .badge-accent {
+      border-color: var(--accent);
+      background: var(--bg-active);
+      color: var(--accent);
+    }
+
+    /* File Explorer */
+    .exp-root {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .exp-toolbar {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .exp-breadcrumbs {
+      flex: 1;
+      min-width: 150px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      overflow-x: auto;
+      font-size: 12.5px;
+    }
+    .exp-crumb {
+      border: none;
+      background: transparent;
+      padding: 2px 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+    }
+    .exp-crumb:hover { background: var(--bg-hover); color: var(--ink); }
+    .exp-crumb.current { color: var(--ink); font-weight: 600; }
+
+    .exp-prompt-bar {
+      padding: 8px 12px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-strong);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+    }
+    .exp-prompt-bar.open { display: flex; }
+
+    .exp-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+    }
+    .exp-sidebar {
+      width: 172px;
+      border-right: 1px solid var(--border);
+      padding: 10px 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex-shrink: 0;
+      background: var(--bg-subtle);
+    }
+    .exp-nav-item {
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+    .exp-nav-item:hover { background: var(--bg-hover); color: var(--ink); }
+    .exp-nav-item.active {
+      background: var(--bg-active);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .exp-main {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      padding: 12px;
+    }
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 10px;
+    }
+    .exp-card {
+      padding: 10px 8px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .exp-card:hover { background: var(--bg-hover); border-color: var(--border); }
+    .exp-card.selected {
+      background: var(--bg-active);
+      border-color: var(--accent);
+    }
+    .exp-card-name {
+      font-size: 12px;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+    .exp-card-meta {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+    .exp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .exp-table th {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11.5px;
+    }
+    .exp-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .exp-table tr:hover td { background: var(--bg-hover); }
+    .exp-table tr.selected td { background: var(--bg-active); }
+    .exp-statusbar {
+      padding: 6px 12px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-subtle);
+      font-size: 11.5px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .empty-state {
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Terminal */
+    .term-root {
+      height: 100%;
+      background: #090d16;
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: text;
+    }
+    .term-line {
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+    .term-line.muted { color: #94a3b8; }
+    .term-line.error { color: #f87171; }
+    .term-line.success { color: #34d399; }
+    .term-line.accent { color: #38bdf8; }
+    .term-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .term-prompt {
+      color: #34d399;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .term-prompt .term-cwd { color: #38bdf8; }
+    .term-input {
+      flex: 1;
+      min-width: 60px;
+      border: none;
+      background: transparent;
+      color: #f8fafc;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+      padding: 0;
+    }
+
+    /* Code Studio */
+    .ed-root {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .ed-toolbar {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ed-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px 0;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .ed-tab {
+      padding: 6px 10px;
+      border-radius: 6px 6px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .ed-tab:hover { color: var(--ink); background: var(--bg-hover); }
+    .ed-tab.active {
+      background: var(--bg-surface-solid);
+      border-color: var(--border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .ed-tab-close {
+      opacity: 0.65;
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+    .ed-tab-close:hover { opacity: 1; background: var(--bg-hover); }
+    .dirty-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--warning);
+      display: inline-block;
+    }
+    .ed-workspace {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .ed-workspace[data-layout="code"] { grid-template-columns: 1fr; }
+    .ed-workspace[data-layout="code"] .ed-preview-pane { display: none; }
+    .ed-workspace[data-layout="preview"] { grid-template-columns: 1fr; }
+    .ed-workspace[data-layout="preview"] .ed-code-pane { display: none; }
+
+    .ed-code-pane {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      border-right: 1px solid var(--border);
+    }
+    .ed-editor-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      background: #0b101b;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+    .ed-gutter {
+      width: 44px;
+      padding: 12px 8px 12px 4px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #475569;
+      background: #080c15;
+      border-right: 1px solid rgba(148, 163, 184, 0.14);
+      overflow: hidden;
+      user-select: none;
+      white-space: pre;
+    }
+    .ed-textarea {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      resize: none;
+      padding: 12px;
+      background: transparent;
+      color: #f1f5f9;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.5;
+      tab-size: 2;
+      outline: none;
+      white-space: pre;
+      overflow: auto;
+    }
+    .ed-preview-pane {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: #ffffff;
+    }
+    .ed-preview-header {
+      padding: 5px 10px;
+      background: var(--bg-elevated);
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-size: 11.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .ed-iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #ffffff;
+    }
+    .ed-console {
+      height: 115px;
+      background: #090d16;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .ed-console.collapsed { height: 28px; }
+    .ed-console-bar {
+      height: 28px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 11.5px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      flex-shrink: 0;
+    }
+    .ed-console-logs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .ed-console.collapsed .ed-console-logs { display: none; }
+    .log-warn { color: #fbbf24; }
+    .log-error { color: #f87171; }
+
+    /* System Monitor */
+    .mon-root {
+      height: 100%;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .mon-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mon-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+    }
+    .mon-card {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mon-card-label {
+      font-size: 11.5px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .mon-card-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .mon-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-elevated);
+      overflow: hidden;
+    }
+    .mon-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 260ms ease;
+    }
+    .mon-charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    .mon-chart-box {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mon-canvas {
+      width: 100%;
+      height: 110px;
+      display: block;
+    }
+    .mon-procs {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      overflow-x: auto;
+    }
+
+    /* Settings */
+    .set-root {
+      height: 100%;
+      display: flex;
+      min-height: 0;
+    }
+    .set-nav {
+      width: 170px;
+      border-right: 1px solid var(--border);
+      background: var(--bg-subtle);
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .set-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .set-group {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .set-group h3 { margin: 0; font-size: 14px; }
+    .theme-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .swatch-btn {
+      padding: 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+    .swatch-btn.active {
+      border-color: var(--accent);
+      background: var(--bg-active);
+    }
+    .swatch-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .set-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .kbd-pill {
+      padding: 2px 7px;
+      border-radius: 5px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-elevated);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    @media (max-width: 720px) {
+      .exp-sidebar { width: 128px; }
+      .set-root { flex-direction: column; }
+      .set-nav {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .ed-workspace[data-layout="split"] {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+      .ed-code-pane { border-right: none; border-bottom: 1px solid var(--border); }
+      .tb-win-title { max-width: 84px; }
+      #desktop-watermark { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="os-root">
+    <main id="desktop" aria-label="NEXUS OS Desktop" tabindex="-1">
+      <div id="desktop-icons" role="list" aria-label="Desktop Shortcuts and Files"></div>
+      <div id="snap-preview" aria-hidden="true"></div>
+      <div id="windows-layer"></div>
+      <div id="desktop-watermark" aria-hidden="true">
+        <div class="wm-brand">NEXUS OS</div>
+        <div class="wm-sub">Workspace Kernel v2.5</div>
+      </div>
+    </main>
+
+    <!-- Start Menu -->
+    <section id="start-menu" role="dialog" aria-label="Start Menu">
+      <div class="sm-header">
+        <div class="sm-search-wrap">
+          <span class="sm-search-icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input id="sm-search" class="sm-search-input" type="search" placeholder="Search apps or virtual files..." autocomplete="off" aria-label="Search apps or virtual files">
+        </div>
+      </div>
+      <div class="sm-content">
+        <div>
+          <div class="sm-section-label">Applications</div>
+          <div id="sm-apps" class="sm-app-grid"></div>
+        </div>
+        <div id="sm-files-section">
+          <div class="sm-section-label">Quick Folders</div>
+          <div id="sm-places" class="sm-places"></div>
+        </div>
+      </div>
+      <div class="sm-footer">
+        <div class="sm-user">
+          <span class="nexus-mark" aria-hidden="true">N</span>
+          <span>operator@nexus</span>
+        </div>
+        <div class="sm-footer-actions">
+          <button type="button" class="btn btn-sm" id="sm-tile-btn" title="Tile Open Windows">Tile</button>
+          <button type="button" class="btn btn-sm" id="sm-cascade-btn" title="Cascade Open Windows">Cascade</button>
+          <button type="button" class="btn btn-sm" id="sm-close-all-btn" title="Close All Open Windows">Close All</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Context Menu & Toast -->
+    <div id="context-menu" role="menu" aria-label="Context Menu"></div>
+    <div id="os-toast" role="status" aria-live="polite"></div>
+
+    <!-- Taskbar -->
+    <header id="taskbar" role="navigation" aria-label="Taskbar">
+      <div class="tb-left">
+        <button type="button" id="start-btn" aria-haspopup="dialog" aria-expanded="false" title="Start Menu (Alt+S)">
+          <span class="nexus-mark" aria-hidden="true">N</span>
+          <span>Start</span>
+        </button>
+      </div>
+      <div id="tb-windows" role="tablist" aria-label="Running Applications"></div>
+      <div class="tb-right">
+        <button type="button" class="tb-tray-btn" id="tb-monitor-btn" title="Open System Monitor (Alt+4)">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="tb-cpu-readout">CPU 14%</span>
+        </button>
+        <button type="button" class="tb-tray-btn" id="tb-settings-btn" title="Open Settings (Alt+5)">
+          <div id="tb-clock">
+            <div id="tb-clock-time">--:--</div>
+            <div id="tb-clock-date">---</div>
+          </div>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const BOOT_TIME = Date.now();
+
+      /* =====================================================================
+         1. ICONS & APPLICATION REGISTRY
+      ===================================================================== */
+      const ICONS = {
+        explorer: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>',
+        terminal: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+        editor: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+        monitor: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+        settings: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.41 1.09H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+        folder: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M4 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-8l-2-2H4z"/></svg>',
+        fileCode: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>',
+        fileText: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+      };
+
+      const APPS = {
+        explorer: { id: 'explorer', name: 'File Explorer', desc: 'Virtual storage & files', icon: ICONS.explorer, width: 740, height: 480, shortcut: 'Alt+1' },
+        terminal: { id: 'terminal', name: 'Terminal', desc: 'POSIX shell & commands', icon: ICONS.terminal, width: 670, height: 430, shortcut: 'Alt+2' },
+        editor:   { id: 'editor',   name: 'Code Studio', desc: 'HTML/CSS/JS live sandbox', icon: ICONS.editor, width: 880, height: 550, shortcut: 'Alt+3' },
+        monitor:  { id: 'monitor',  name: 'System Monitor', desc: 'Simulated telemetry & tasks', icon: ICONS.monitor, width: 750, height: 500, shortcut: 'Alt+4' },
+        settings: { id: 'settings', name: 'Settings', desc: 'Themes, backup & shortcuts', icon: ICONS.settings, width: 690, height: 480, shortcut: 'Alt+5' }
+      };
+
+      /* =====================================================================
+         2. EVENT BUS & TOAST HELPER
+      ===================================================================== */
+      const Bus = {
+        listeners: new Map(),
+        on(event, fn) {
+          if (!this.listeners.has(event)) this.listeners.set(event, new Set());
+          this.listeners.get(event).add(fn);
+          return () => this.listeners.get(event)?.delete(fn);
+        },
+        emit(event, payload) {
+          const set = this.listeners.get(event);
+          if (!set) return;
+          for (const fn of [...set]) {
+            try { fn(payload); } catch (err) { console.error('[Bus]', event, err); }
+          }
+        }
+      };
+
+      let toastTimer = null;
+      function notify(msg) {
+        const el = document.getElementById('os-toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+      }
+
+      /* =====================================================================
+         3. FAULT-TOLERANT STORAGE (IndexedDB -> localStorage -> Memory)
+      ===================================================================== */
+      const NexusStorage = {
+        db: null,
+        backend: 'Memory (Session)',
+        mem: new Map(),
+
+        async init() {
+          try {
+            if (typeof indexedDB !== 'undefined') {
+              this.db = await new Promise((resolve, reject) => {
+                const req = indexedDB.open('NexusOS_DB_v1', 1);
+                req.onupgradeneeded = () => {
+                  const db = req.result;
+                  if (!db.objectStoreNames.contains('kv')) db.createObjectStore('kv');
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+              });
+              this.backend = 'IndexedDB';
+              return;
+            }
+          } catch (_) { /* Fallback */ }
+
+          try {
+            const probe = '__nexus_probe__';
+            localStorage.setItem(probe, '1');
+            localStorage.removeItem(probe);
+            this.backend = 'LocalStorage';
+          } catch (_) {
+            this.backend = 'Memory (Sandboxed)';
+          }
+        },
+
+        async get(key) {
+          if (this.db) {
+            try {
+              return await new Promise((resolve, reject) => {
+                const tx = this.db.transaction('kv', 'readonly');
+                const req = tx.objectStore('kv').get(key);
+                req.onsuccess = () => resolve(req.result ?? null);
+                req.onerror = () => reject(req.error);
+              });
+            } catch (_) {}
+          }
+          if (this.backend === 'LocalStorage') {
+            try {
+              const raw = localStorage.getItem('nexus_' + key);
+              return raw ? JSON.parse(raw) : null;
+            } catch (_) {}
+          }
+          return this.mem.get(key) ?? null;
+        },
+
+        async set(key, value) {
+          this.mem.set(key, value);
+          if (this.db) {
+            try {
+              await new Promise((resolve, reject) => {
+                const tx = this.db.transaction('kv', 'readwrite');
+                tx.objectStore('kv').put(value, key);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+              });
+              return;
+            } catch (_) {}
+          }
+          if (this.backend === 'LocalStorage') {
+            try { localStorage.setItem('nexus_' + key, JSON.stringify(value)); } catch (_) {}
+          }
+        }
+      };
+
+      /* =====================================================================
+         4. VIRTUAL FILESYSTEM (Shared across Explorer, Terminal, Code Studio)
+      ===================================================================== */
+      function buildDefaultFS() {
+        const now = Date.now();
+        return {
+          '/': { type: 'dir', mtime: now },
+          '/Desktop': { type: 'dir', mtime: now },
+          '/Documents': { type: 'dir', mtime: now },
+          '/Projects': { type: 'dir', mtime: now },
+          '/Projects/webapp': { type: 'dir', mtime: now },
+          '/Desktop/notes.txt': {
+            type: 'file',
+            mtime: now,
+            content: [
+              'NEXUS OS Quick Notes',
+              '====================',
+              '- Double-click any file on the Desktop or in File Explorer to open it in Code Studio.',
+              '- Open Terminal (Alt+2) and run "help" or "tree" to inspect or edit this shared filesystem.',
+              '- All file edits and system settings persist across browser reloads via IndexedDB.'
+            ].join('\n')
+          },
+          '/Documents/architecture.txt': {
+            type: 'file',
+            mtime: now,
+            content: [
+              'NEXUS OS Kernel Architecture',
+              '============================',
+              '1. Storage Layer: IndexedDB primary store with automatic LocalStorage & Memory fallback.',
+              '2. Virtual Filesystem: POSIX-style hierarchical path map broadcasting live pub/sub events.',
+              '3. Window Manager: Multi-window z-index compositor, edge snapping, and 8-way resize handles.',
+              '4. Sandbox Studio: Isolated iframe srcdoc runner with postMessage console telemetry.'
+            ].join('\n')
+          },
+          '/Projects/webapp/index.html': {
+            type: 'file',
+            mtime: now,
+            content: [
+              '<div class="card">',
+              '  <span class="pill">NEXUS Sandbox</span>',
+              '  <h1>Interactive Counter</h1>',
+              '  <p>Edit HTML, CSS, or JS in Code Studio to update this sandboxed live preview.</p>',
+              '  <div class="row">',
+              '    <button id="decBtn" type="button">-1</button>',
+              '    <output id="countOut">0</output>',
+              '    <button id="incBtn" type="button">+1</button>',
+              '  </div>',
+              '</div>'
+            ].join('\n')
+          },
+          '/Projects/webapp/style.css': {
+            type: 'file',
+            mtime: now,
+            content: [
+              'body {',
+              '  margin: 0;',
+              '  min-height: 100vh;',
+              '  display: grid;',
+              '  place-items: center;',
+              '  font-family: system-ui, sans-serif;',
+              '  background: #0f172a;',
+              '  color: #f8fafc;',
+              '}',
+              '.card {',
+              '  padding: 28px;',
+              '  border-radius: 14px;',
+              '  background: #1e293b;',
+              '  border: 1px solid #334155;',
+              '  text-align: center;',
+              '  max-width: 340px;',
+              '  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);',
+              '}',
+              '.pill {',
+              '  font-size: 11px;',
+              '  text-transform: uppercase;',
+              '  letter-spacing: 0.08em;',
+              '  padding: 4px 10px;',
+              '  border-radius: 99px;',
+              '  background: rgba(56, 189, 248, 0.16);',
+              '  color: #38bdf8;',
+              '}',
+              'h1 { margin: 14px 0 8px; font-size: 22px; }',
+              'p { margin: 0 0 20px; color: #94a3b8; font-size: 14px; line-height: 1.45; }',
+              '.row { display: flex; align-items: center; justify-content: center; gap: 16px; }',
+              'button {',
+              '  padding: 8px 16px;',
+              '  border-radius: 8px;',
+              '  border: none;',
+              '  background: #38bdf8;',
+              '  color: #082f49;',
+              '  font-weight: 700;',
+              '  cursor: pointer;',
+              '}',
+              'button:hover { background: #7dd3fc; }',
+              'output { font-size: 28px; font-weight: 700; min-width: 48px; }'
+            ].join('\n')
+          },
+          '/Projects/webapp/script.js': {
+            type: 'file',
+            mtime: now,
+            content: [
+              'let count = 0;',
+              'const out = document.getElementById("countOut");',
+              '',
+              'document.getElementById("incBtn").addEventListener("click", () => {',
+              '  count += 1;',
+              '  out.textContent = count;',
+              '  console.log("Incremented counter ->", count);',
+              '});',
+              '',
+              'document.getElementById("decBtn").addEventListener("click", () => {',
+              '  count -= 1;',
+              '  out.textContent = count;',
+              '  console.log("Decremented counter ->", count);',
+              '});',
+              '',
+              'console.log("Sandbox preview initialized.");'
+            ].join('\n')
+          }
+        };
+      }
+
+      const VFS = {
+        nodes: {},
+
+        async init() {
+          const saved = await NexusStorage.get('vfs_nodes');
+          if (saved && typeof saved === 'object' && saved['/'] && saved['/Desktop']) {
+            this.nodes = saved;
+          } else {
+            this.nodes = buildDefaultFS();
+            await this.persist();
+          }
+        },
+
+        async persist() {
+          await NexusStorage.set('vfs_nodes', this.nodes);
+          Bus.emit('fs:change');
+        },
+
+        async reset() {
+          this.nodes = buildDefaultFS();
+          await this.persist();
+        },
+
+        normalize(path, cwd = '/') {
+          if (!path || path === '.') return cwd;
+          const full = path.startsWith('/') ? path : (cwd === '/' ? '/' + path : cwd + '/' + path);
+          const parts = full.split('/');
+          const stack = [];
+          for (const part of parts) {
+            if (!part || part === '.') continue;
+            if (part === '..') stack.pop();
+            else stack.push(part);
+          }
+          return '/' + stack.join('/');
+        },
+
+        parent(path) {
+          const norm = this.normalize(path);
+          if (norm === '/') return '/';
+          const idx = norm.lastIndexOf('/');
+          return idx <= 0 ? '/' : norm.slice(0, idx);
+        },
+
+        basename(path) {
+          const norm = this.normalize(path);
+          if (norm === '/') return '/';
+          return norm.slice(norm.lastIndexOf('/') + 1);
+        },
+
+        exists(path) {
+          return Boolean(this.nodes[this.normalize(path)]);
+        },
+
+        stat(path) {
+          return this.nodes[this.normalize(path)] || null;
+        },
+
+        list(dirPath) {
+          const dir = this.normalize(dirPath);
+          const node = this.nodes[dir];
+          if (!node || node.type !== 'dir') throw new Error(`Not a directory: ${dir}`);
+          const prefix = dir === '/' ? '/' : dir + '/';
+          const entries = [];
+          for (const [p, meta] of Object.entries(this.nodes)) {
+            if (p === dir || !p.startsWith(prefix)) continue;
+            const rest = p.slice(prefix.length);
+            if (!rest.includes('/')) {
+              entries.push({
+                name: rest,
+                path: p,
+                type: meta.type,
+                mtime: meta.mtime || Date.now(),
+                size: meta.type === 'file' ? new Blob([meta.content || '']).size : 0
+              });
+            }
+          }
+          return entries.sort((a, b) => {
+            if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+            return a.name.localeCompare(b.name);
+          });
+        },
+
+        readFile(path) {
+          const p = this.normalize(path);
+          const node = this.nodes[p];
+          if (!node) throw new Error(`No such file: ${p}`);
+          if (node.type !== 'file') throw new Error(`Is a directory: ${p}`);
+          return node.content ?? '';
+        },
+
+        async writeFile(path, content = '') {
+          const p = this.normalize(path);
+          const par = this.parent(p);
+          if (!this.nodes[par] || this.nodes[par].type !== 'dir') {
+            throw new Error(`Parent directory does not exist: ${par}`);
+          }
+          if (this.nodes[p] && this.nodes[p].type === 'dir') {
+            throw new Error(`Cannot overwrite directory with file: ${p}`);
+          }
+          this.nodes[p] = { type: 'file', content: String(content), mtime: Date.now() };
+          await this.persist();
+        },
+
+        async mkdir(path) {
+          const p = this.normalize(path);
+          if (this.nodes[p]) throw new Error(`Path already exists: ${p}`);
+          const par = this.parent(p);
+          if (!this.nodes[par] || this.nodes[par].type !== 'dir') {
+            throw new Error(`Parent directory does not exist: ${par}`);
+          }
+          this.nodes[p] = { type: 'dir', mtime: Date.now() };
+          await this.persist();
+        },
+
+        async remove(path, recursive = false) {
+          const p = this.normalize(path);
+          if (p === '/' || p === '/Desktop') throw new Error(`Protected system path: ${p}`);
+          const node = this.nodes[p];
+          if (!node) throw new Error(`No such file or directory: ${p}`);
+          if (node.type === 'dir') {
+            const children = Object.keys(this.nodes).filter(k => k.startsWith(p + '/'));
+            if (children.length > 0 && !recursive) {
+              throw new Error(`Directory not empty (use -r): ${p}`);
+            }
+            for (const c of children) delete this.nodes[c];
+          }
+          delete this.nodes[p];
+          await this.persist();
+        },
+
+        async move(src, dest) {
+          const s = this.normalize(src);
+          let d = this.normalize(dest);
+          if (s === '/' || s === '/Desktop') throw new Error(`Cannot move protected path: ${s}`);
+          if (!this.nodes[s]) throw new Error(`Source does not exist: ${s}`);
+          if (this.nodes[d] && this.nodes[d].type === 'dir') {
+            d = this.normalize(d + '/' + this.basename(s));
+          }
+          if (d === s) return d;
+          if (d.startsWith(s + '/')) throw new Error('Cannot move a directory into itself');
+          const par = this.parent(d);
+          if (!this.nodes[par] || this.nodes[par].type !== 'dir') {
+            throw new Error(`Destination folder does not exist: ${par}`);
+          }
+          const updates = [];
+          for (const [k, val] of Object.entries(this.nodes)) {
+            if (k === s || k.startsWith(s + '/')) {
+              const nextKey = d + k.slice(s.length);
+              updates.push([k, nextKey, { ...val, mtime: Date.now() }]);
+            }
+          }
+          for (const [oldK] of updates) delete this.nodes[oldK];
+          for (const [, newK, val] of updates) this.nodes[newK] = val;
+          await this.persist();
+          return d;
+        },
+
+        async copy(src, dest) {
+          const s = this.normalize(src);
+          let d = this.normalize(dest);
+          if (!this.nodes[s]) throw new Error(`Source does not exist: ${s}`);
+          if (this.nodes[d] && this.nodes[d].type === 'dir') {
+            d = this.normalize(d + '/' + this.basename(s));
+          }
+          if (d.startsWith(s + '/')) throw new Error('Cannot copy a directory into itself');
+          const par = this.parent(d);
+          if (!this.nodes[par] || this.nodes[par].type !== 'dir') {
+            throw new Error(`Destination folder does not exist: ${par}`);
+          }
+          for (const [k, val] of Object.entries(this.nodes)) {
+            if (k === s || k.startsWith(s + '/')) {
+              const nextKey = d + k.slice(s.length);
+              this.nodes[nextKey] = { ...val, mtime: Date.now() };
+            }
+          }
+          await this.persist();
+        },
+
+        stats() {
+          let files = 0, dirs = 0, bytes = 0;
+          for (const node of Object.values(this.nodes)) {
+            if (node.type === 'dir') dirs++;
+            else {
+              files++;
+              bytes += new Blob([node.content || '']).size;
+            }
+          }
+          return { files, dirs, bytes };
+        },
+
+        allFiles() {
+          return Object.entries(this.nodes)
+            .filter(([, n]) => n.type === 'file')
+            .map(([p]) => p)
+            .sort();
+        }
+      };
+
+      /* =====================================================================
+         5. OS SETTINGS & THEMES
+      ===================================================================== */
+      const DEFAULT_SETTINGS = {
+        theme: 'obsidian',
+        wallpaper: 'aurora',
+        scale: 'default',
+        reducedMotion: false
+      };
+
+      const SettingsState = {
+        data: { ...DEFAULT_SETTINGS },
+
+        async init() {
+          const saved = await NexusStorage.get('os_settings');
+          if (saved && typeof saved === 'object') {
+            this.data = { ...DEFAULT_SETTINGS, ...saved };
+          }
+          this.apply();
+        },
+
+        apply() {
+          const root = document.documentElement;
+          root.dataset.theme = this.data.theme;
+          root.dataset.wallpaper = this.data.wallpaper;
+          root.dataset.scale = this.data.scale;
+          root.dataset.motion = this.data.reducedMotion ? 'reduced' : 'normal';
+          Bus.emit('settings:change', this.data);
+        },
+
+        async update(patch) {
+          this.data = { ...this.data, ...patch };
+          this.apply();
+          await NexusStorage.set('os_settings', this.data);
+        },
+
+        async reset() {
+          this.data = { ...DEFAULT_SETTINGS };
+          this.apply();
+          await NexusStorage.set('os_settings', this.data);
+        }
+      };
+
+      /* =====================================================================
+         6. MULTI-WINDOW MANAGER (Draggable, 8-Way Resizable, Edge Snapping)
+      ===================================================================== */
+      const WM = {
+        windows: new Map(),
+        nextPid: 101,
+        topZ: 100,
+        activeId: null,
+        layer: document.getElementById('windows-layer'),
+        snapEl: document.getElementById('snap-preview'),
+
+        open(appId, launchArgs = {}) {
+          const meta = APPS[appId];
+          if (!meta) return null;
+
+          if (appId === 'settings' || appId === 'monitor' || (appId === 'editor' && launchArgs.filePath)) {
+            for (const [wid, w] of this.windows.entries()) {
+              if (w.appId === appId) {
+                if (w.minimized) this.restore(wid);
+                this.focus(wid);
+                if (w.api && typeof w.api.onLaunchArgs === 'function') {
+                  w.api.onLaunchArgs(launchArgs);
+                }
+                return wid;
+              }
+            }
+          }
+
+          const pid = this.nextPid++;
+          const wid = 'win-' + pid;
+          const deskRect = document.getElementById('desktop').getBoundingClientRect();
+          const cascade = (this.windows.size % 6) * 26;
+          const w = Math.min(meta.width, Math.max(310, deskRect.width - 24));
+          const h = Math.min(meta.height, Math.max(240, deskRect.height - 24));
+          const x = Math.max(12, Math.min(deskRect.width - w - 12, 60 + cascade));
+          const y = Math.max(12, Math.min(deskRect.height - h - 12, 30 + cascade));
+
+          const el = document.createElement('section');
+          el.className = 'os-window';
+          el.id = wid;
+          el.setAttribute('role', 'dialog');
+          el.setAttribute('aria-label', meta.name);
+          el.style.left = `${x}px`;
+          el.style.top = `${y}px`;
+          el.style.width = `${w}px`;
+          el.style.height = `${h}px`;
+
+          el.innerHTML = `
+            <div class="win-titlebar">
+              <div class="win-title-group">
+                <span class="win-app-icon" aria-hidden="true">${meta.icon}</span>
+                <span class="win-title">${escapeHtml(meta.name)}</span>
+              </div>
+              <div class="win-controls">
+                <button type="button" class="win-ctrl-btn min" title="Minimize (Alt+M)" aria-label="Minimize ${escapeHtml(meta.name)}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button type="button" class="win-ctrl-btn max" title="Maximize or Restore (Alt+Enter)" aria-label="Maximize ${escapeHtml(meta.name)}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                </button>
+                <button type="button" class="win-ctrl-btn close" title="Close (Alt+W)" aria-label="Close ${escapeHtml(meta.name)}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="win-body"></div>
+            <div class="resize-handle rh-n" data-dir="n"></div>
+            <div class="resize-handle rh-s" data-dir="s"></div>
+            <div class="resize-handle rh-e" data-dir="e"></div>
+            <div class="resize-handle rh-w" data-dir="w"></div>
+            <div class="resize-handle rh-ne" data-dir="ne"></div>
+            <div class="resize-handle rh-nw" data-dir="nw"></div>
+            <div class="resize-handle rh-se" data-dir="se"></div>
+            <div class="resize-handle rh-sw" data-dir="sw"></div>
+          `;
+
+          this.layer.appendChild(el);
+
+          const winObj = {
+            id: wid,
+            pid,
+            appId,
+            title: meta.name,
+            el,
+            bodyEl: el.querySelector('.win-body'),
+            titleEl: el.querySelector('.win-title'),
+            minimized: false,
+            maximized: deskRect.width < 640,
+            rect: { x, y, w, h },
+            cleanupFns: [],
+            api: null
+          };
+
+          if (winObj.maximized) el.classList.add('maximized');
+          this.windows.set(wid, winObj);
+          this.bindWindowEvents(winObj);
+
+          winObj.api = AppMount[appId](winObj, launchArgs) || {};
+          this.focus(wid);
+          Bus.emit('wm:change');
+          return wid;
+        },
+
+        setTitle(wid, title) {
+          const w = this.windows.get(wid);
+          if (!w) return;
+          w.title = title;
+          w.titleEl.textContent = title;
+          Bus.emit('wm:change');
+        },
+
+        focus(wid) {
+          const target = this.windows.get(wid);
+          if (!target || target.minimized) return;
+          this.topZ += 1;
+          target.el.style.zIndex = String(this.topZ);
+          this.activeId = wid;
+          for (const [id, w] of this.windows.entries()) {
+            w.el.classList.toggle('focused', id === wid);
+          }
+          if (target.api && typeof target.api.onFocus === 'function') {
+            target.api.onFocus();
+          }
+          Bus.emit('wm:change');
+        },
+
+        minimize(wid) {
+          const w = this.windows.get(wid);
+          if (!w) return;
+          w.minimized = true;
+          w.el.classList.add('minimized');
+          if (this.activeId === wid) {
+            this.activeId = this.findNextTopWindow(wid);
+            if (this.activeId) this.focus(this.activeId);
+          }
+          Bus.emit('wm:change');
+        },
+
+        restore(wid) {
+          const w = this.windows.get(wid);
+          if (!w) return;
+          w.minimized = false;
+          w.el.classList.remove('minimized');
+          this.focus(wid);
+          Bus.emit('wm:change');
+        },
+
+        toggleMaximize(wid) {
+          const w = this.windows.get(wid);
+          if (!w) return;
+          w.maximized = !w.maximized;
+          w.el.classList.toggle('maximized', w.maximized);
+          if (!w.maximized) this.applyRect(w);
+          this.focus(wid);
+          Bus.emit('wm:change');
+        },
+
+        close(wid) {
+          const w = this.windows.get(wid);
+          if (!w) return;
+          for (const fn of w.cleanupFns) {
+            try { fn(); } catch (_) {}
+          }
+          w.el.remove();
+          this.windows.delete(wid);
+          if (this.activeId === wid) {
+            this.activeId = this.findNextTopWindow();
+            if (this.activeId) this.focus(this.activeId);
+          }
+          Bus.emit('wm:change');
+        },
+
+        closeAll() {
+          for (const wid of [...this.windows.keys()]) this.close(wid);
+        },
+
+        tileWindows() {
+          const visible = [...this.windows.values()].filter(w => !w.minimized);
+          if (!visible.length) return;
+          const desk = document.getElementById('desktop').getBoundingClientRect();
+          const cols = Math.ceil(Math.sqrt(visible.length));
+          const rows = Math.ceil(visible.length / cols);
+          const cellW = Math.floor(desk.width / cols);
+          const cellH = Math.floor(desk.height / rows);
+
+          visible.forEach((w, idx) => {
+            const c = idx % cols;
+            const r = Math.floor(idx / cols);
+            w.maximized = false;
+            w.el.classList.remove('maximized');
+            w.rect = {
+              x: c * cellW + 4,
+              y: r * cellH + 4,
+              w: Math.max(300, cellW - 8),
+              h: Math.max(220, cellH - 8)
+            };
+            this.applyRect(w);
+          });
+          Bus.emit('wm:change');
+        },
+
+        cascadeWindows() {
+          const visible = [...this.windows.values()].filter(w => !w.minimized);
+          if (!visible.length) return;
+          const desk = document.getElementById('desktop').getBoundingClientRect();
+          visible.forEach((w, idx) => {
+            const meta = APPS[w.appId] || { width: 700, height: 460 };
+            const offset = (idx % 7) * 28;
+            w.maximized = false;
+            w.el.classList.remove('maximized');
+            w.rect = {
+              x: Math.min(desk.width - 320, 44 + offset),
+              y: Math.min(desk.height - 240, 28 + offset),
+              w: Math.min(meta.width, desk.width - 60),
+              h: Math.min(meta.height, desk.height - 60)
+            };
+            this.applyRect(w);
+            this.focus(w.id);
+          });
+        },
+
+        cycleFocus() {
+          const openIds = [...this.windows.values()]
+            .filter(w => !w.minimized)
+            .map(w => w.id);
+          if (!openIds.length) return;
+          const idx = openIds.indexOf(this.activeId);
+          const next = openIds[(idx + 1) % openIds.length];
+          this.focus(next);
+        },
+
+        findNextTopWindow(excludeId = null) {
+          let best = null;
+          let bestZ = -1;
+          for (const [id, w] of this.windows.entries()) {
+            if (id === excludeId || w.minimized) continue;
+            const z = Number(w.el.style.zIndex || 0);
+            if (z > bestZ) {
+              bestZ = z;
+              best = id;
+            }
+          }
+          return best;
+        },
+
+        applyRect(w) {
+          w.el.style.left = `${Math.round(w.rect.x)}px`;
+          w.el.style.top = `${Math.round(w.rect.y)}px`;
+          w.el.style.width = `${Math.round(w.rect.w)}px`;
+          w.el.style.height = `${Math.round(w.rect.h)}px`;
+        },
+
+        clampAllToViewport() {
+          const desk = document.getElementById('desktop').getBoundingClientRect();
+          for (const w of this.windows.values()) {
+            if (w.maximized) continue;
+            w.rect.w = Math.min(w.rect.w, Math.max(300, desk.width - 12));
+            w.rect.h = Math.min(w.rect.h, Math.max(220, desk.height - 12));
+            w.rect.x = Math.max(0, Math.min(desk.width - 90, w.rect.x));
+            w.rect.y = Math.max(0, Math.min(desk.height - 44, w.rect.y));
+            this.applyRect(w);
+          }
+        },
+
+        bindWindowEvents(w) {
+          const { el, id } = w;
+          el.addEventListener('pointerdown', () => this.focus(id));
+
+          const titlebar = el.querySelector('.win-titlebar');
+          const minBtn = el.querySelector('.win-ctrl-btn.min');
+          const maxBtn = el.querySelector('.win-ctrl-btn.max');
+          const closeBtn = el.querySelector('.win-ctrl-btn.close');
+
+          minBtn.addEventListener('click', (e) => { e.stopPropagation(); this.minimize(id); });
+          maxBtn.addEventListener('click', (e) => { e.stopPropagation(); this.toggleMaximize(id); });
+          closeBtn.addEventListener('click', (e) => { e.stopPropagation(); this.close(id); });
+          titlebar.addEventListener('dblclick', (e) => {
+            if (e.target.closest('.win-controls')) return;
+            this.toggleMaximize(id);
+          });
+
+          titlebar.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0 || e.target.closest('.win-controls')) return;
+            e.preventDefault();
+            this.focus(id);
+            const desk = document.getElementById('desktop').getBoundingClientRect();
+
+            if (w.maximized) {
+              const ratio = (e.clientX - desk.left) / desk.width;
+              w.maximized = false;
+              el.classList.remove('maximized');
+              w.rect.w = Math.min(w.rect.w, desk.width * 0.75);
+              w.rect.x = Math.max(0, (e.clientX - desk.left) - w.rect.w * ratio);
+              w.rect.y = Math.max(0, e.clientY - desk.top - 18);
+              this.applyRect(w);
+            }
+
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const origX = w.rect.x;
+            const origY = w.rect.y;
+            let snapTarget = null;
+
+            document.body.classList.add('is-interacting-window');
+            titlebar.setPointerCapture(e.pointerId);
+
+            const onMove = (ev) => {
+              const dx = ev.clientX - startX;
+              const dy = ev.clientY - startY;
+              w.rect.x = Math.max(-w.rect.w + 90, Math.min(desk.width - 90, origX + dx));
+              w.rect.y = Math.max(0, Math.min(desk.height - 38, origY + dy));
+              this.applyRect(w);
+
+              const relX = ev.clientX - desk.left;
+              const relY = ev.clientY - desk.top;
+              if (relY <= 8) {
+                snapTarget = 'max';
+                this.showSnap(0, 0, desk.width, desk.height);
+              } else if (relX <= 10 && desk.width >= 620) {
+                snapTarget = 'left';
+                this.showSnap(0, 0, desk.width / 2, desk.height);
+              } else if (relX >= desk.width - 10 && desk.width >= 620) {
+                snapTarget = 'right';
+                this.showSnap(desk.width / 2, 0, desk.width / 2, desk.height);
+              } else {
+                snapTarget = null;
+                this.hideSnap();
+              }
+            };
+
+            const onUp = () => {
+              document.body.classList.remove('is-interacting-window');
+              this.hideSnap();
+              if (snapTarget === 'max') {
+                w.maximized = true;
+                el.classList.add('maximized');
+              } else if (snapTarget === 'left') {
+                w.rect = { x: 0, y: 0, w: Math.floor(desk.width / 2), h: desk.height };
+                this.applyRect(w);
+              } else if (snapTarget === 'right') {
+                w.rect = { x: Math.floor(desk.width / 2), y: 0, w: Math.ceil(desk.width / 2), h: desk.height };
+                this.applyRect(w);
+              }
+              titlebar.removeEventListener('pointermove', onMove);
+              titlebar.removeEventListener('pointerup', onUp);
+              titlebar.removeEventListener('pointercancel', onUp);
+            };
+
+            titlebar.addEventListener('pointermove', onMove);
+            titlebar.addEventListener('pointerup', onUp);
+            titlebar.addEventListener('pointercancel', onUp);
+          });
+
+          el.querySelectorAll('.resize-handle').forEach((handle) => {
+            handle.addEventListener('pointerdown', (e) => {
+              if (e.button !== 0 || w.maximized) return;
+              e.preventDefault();
+              e.stopPropagation();
+              this.focus(id);
+
+              const dir = handle.dataset.dir;
+              const desk = document.getElementById('desktop').getBoundingClientRect();
+              const startX = e.clientX;
+              const startY = e.clientY;
+              const orig = { ...w.rect };
+              const minW = 300;
+              const minH = 220;
+
+              document.body.classList.add('is-interacting-window');
+              handle.setPointerCapture(e.pointerId);
+
+              const onMove = (ev) => {
+                const dx = ev.clientX - startX;
+                const dy = ev.clientY - startY;
+                let { x, y, w: width, h: height } = orig;
+
+                if (dir.includes('e')) width = Math.max(minW, Math.min(desk.width - x, orig.w + dx));
+                if (dir.includes('s')) height = Math.max(minH, Math.min(desk.height - y, orig.h + dy));
+                if (dir.includes('w')) {
+                  const nextW = Math.max(minW, orig.w - dx);
+                  const nextX = orig.x + (orig.w - nextW);
+                  if (nextX >= 0) { x = nextX; width = nextW; }
+                }
+                if (dir.includes('n')) {
+                  const nextH = Math.max(minH, orig.h - dy);
+                  const nextY = orig.y + (orig.h - nextH);
+                  if (nextY >= 0) { y = nextY; height = nextH; }
+                }
+                w.rect = { x, y, w: width, h: height };
+                this.applyRect(w);
+              };
+
+              const onUp = () => {
+                document.body.classList.remove('is-interacting-window');
+                handle.removeEventListener('pointermove', onMove);
+                handle.removeEventListener('pointerup', onUp);
+                handle.removeEventListener('pointercancel', onUp);
+              };
+
+              handle.addEventListener('pointermove', onMove);
+              handle.addEventListener('pointerup', onUp);
+              handle.addEventListener('pointercancel', onUp);
+            });
+          });
+        },
+
+        showSnap(x, y, w, h) {
+          this.snapEl.style.left = `${x + 6}px`;
+          this.snapEl.style.top = `${y + 6}px`;
+          this.snapEl.style.width = `${w - 12}px`;
+          this.snapEl.style.height = `${h - 12}px`;
+          this.snapEl.classList.add('visible');
+        },
+
+        hideSnap() {
+          this.snapEl.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('resize', () => WM.clampAllToViewport());
+
+      /* =====================================================================
+         7. APPLICATIONS
+      ===================================================================== */
+      const AppMount = {};
+
+      /* ---------------- 7A. FILE EXPLORER ---------------- */
+      AppMount.explorer = (win, args = {}) => {
+        let currentDir = VFS.exists(args.path) && VFS.stat(args.path).type === 'dir' ? VFS.normalize(args.path) : '/Projects/webapp';
+        let selectedPath = null;
+        let viewMode = 'grid';
+        let searchQuery = '';
+        let promptMode = null;
+
+        win.bodyEl.innerHTML = `
+          <div class="exp-root">
+            <div class="exp-toolbar">
+              <button type="button" class="btn btn-sm" data-act="up" title="Parent Directory">Up</button>
+              <nav class="exp-breadcrumbs" aria-label="Folder Path"></nav>
+              <input type="search" class="input" data-role="search" placeholder="Filter folder..." style="width:132px" aria-label="Filter current folder">
+              <button type="button" class="btn btn-sm" data-act="new-file">+ File</button>
+              <button type="button" class="btn btn-sm" data-act="new-dir">+ Folder</button>
+              <button type="button" class="btn btn-sm" data-act="rename" disabled>Rename</button>
+              <button type="button" class="btn btn-sm" data-act="download" disabled title="Download selected file">Export</button>
+              <button type="button" class="btn btn-sm btn-danger" data-act="delete" disabled>Delete</button>
+              <button type="button" class="btn btn-sm" data-act="view" title="Toggle Grid or Details View">Details</button>
+            </div>
+            <div class="exp-prompt-bar" role="region" aria-label="File Action Prompt"></div>
+            <div class="exp-body">
+              <aside class="exp-sidebar" aria-label="Quick Locations"></aside>
+              <div class="exp-main" tabindex="0"></div>
+            </div>
+            <div class="exp-statusbar">
+              <span data-role="count">0 items</span>
+              <span data-role="storage-hint">Persistent Storage Active</span>
+            </div>
+          </div>
+        `;
+
+        const crumbsEl = win.bodyEl.querySelector('.exp-breadcrumbs');
+        const sidebarEl = win.bodyEl.querySelector('.exp-sidebar');
+        const mainEl = win.bodyEl.querySelector('.exp-main');
+        const promptBar = win.bodyEl.querySelector('.exp-prompt-bar');
+        const searchInput = win.bodyEl.querySelector('[data-role="search"]');
+        const renameBtn = win.bodyEl.querySelector('[data-act="rename"]');
+        const downloadBtn = win.bodyEl.querySelector('[data-act="download"]');
+        const deleteBtn = win.bodyEl.querySelector('[data-act="delete"]');
+        const viewBtn = win.bodyEl.querySelector('[data-act="view"]');
+        const countEl = win.bodyEl.querySelector('[data-role="count"]');
+        const hintEl = win.bodyEl.querySelector('[data-role="storage-hint"]');
+
+        function openItem(entry) {
+          if (entry.type === 'dir') navigate(entry.path);
+          else WM.open('editor', { filePath: entry.path });
+        }
+
+        function navigate(path) {
+          try {
+            const norm = VFS.normalize(path);
+            if (!VFS.exists(norm) || VFS.stat(norm).type !== 'dir') return;
+            currentDir = norm;
+            selectedPath = null;
+            closePrompt();
+            render();
+          } catch (_) {}
+        }
+
+        function openPrompt(mode) {
+          promptMode = mode;
+          promptBar.classList.add('open');
+          if (mode === 'delete' && selectedPath) {
+            promptBar.innerHTML = `
+              <span>Delete <strong>${escapeHtml(VFS.basename(selectedPath))}</strong>?</span>
+              <button type="button" class="btn btn-sm btn-danger" data-p="confirm-del">Delete Permanently</button>
+              <button type="button" class="btn btn-sm" data-p="cancel">Cancel</button>
+              <span data-p="err" style="color:var(--danger)"></span>
+            `;
+            promptBar.querySelector('[data-p="confirm-del"]').focus();
+          } else {
+            const initial = mode === 'rename' && selectedPath ? VFS.basename(selectedPath) : (mode === 'new-file' ? 'untitled.js' : 'new-folder');
+            const label = mode === 'rename' ? 'Rename to:' : (mode === 'new-file' ? 'New file name:' : 'New folder name:');
+            promptBar.innerHTML = `
+              <label>${label}</label>
+              <input type="text" class="input" data-p="name" value="${escapeHtml(initial)}" style="width:190px">
+              <button type="button" class="btn btn-sm btn-primary" data-p="save">Confirm</button>
+              <button type="button" class="btn btn-sm" data-p="cancel">Cancel</button>
+              <span data-p="err" style="color:var(--danger)"></span>
+            `;
+            const inp = promptBar.querySelector('[data-p="name"]');
+            inp.focus();
+            inp.select();
+          }
+        }
+
+        function closePrompt() {
+          promptMode = null;
+          promptBar.classList.remove('open');
+          promptBar.innerHTML = '';
+        }
+
+        async function submitPrompt() {
+          const errEl = promptBar.querySelector('[data-p="err"]');
+          try {
+            if (promptMode === 'delete' && selectedPath) {
+              const name = VFS.basename(selectedPath);
+              await VFS.remove(selectedPath, true);
+              selectedPath = null;
+              closePrompt();
+              notify(`Deleted ${name}`);
+              return;
+            }
+            const rawName = (promptBar.querySelector('[data-p="name"]')?.value || '').trim();
+            if (!rawName || rawName.includes('/')) throw new Error('Enter a valid name without "/"');
+            const targetPath = VFS.normalize(rawName, currentDir);
+            if (promptMode === 'new-file') {
+              if (VFS.exists(targetPath)) throw new Error('File already exists');
+              await VFS.writeFile(targetPath, '');
+              selectedPath = targetPath;
+              notify(`Created ${rawName}`);
+            } else if (promptMode === 'new-dir') {
+              await VFS.mkdir(targetPath);
+              selectedPath = targetPath;
+              notify(`Created folder ${rawName}`);
+            } else if (promptMode === 'rename' && selectedPath) {
+              const moved = await VFS.move(selectedPath, targetPath);
+              selectedPath = moved;
+              notify(`Renamed to ${rawName}`);
+            }
+            closePrompt();
+          } catch (err) {
+            if (errEl) errEl.textContent = err.message;
+          }
+        }
+
+        promptBar.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-p]');
+          if (!btn) return;
+          if (btn.dataset.p === 'cancel') closePrompt();
+          else submitPrompt();
+        });
+        promptBar.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); submitPrompt(); }
+          if (e.key === 'Escape') { e.preventDefault(); closePrompt(); }
+        });
+
+        function render() {
+          if (!VFS.exists(currentDir)) currentDir = '/';
+          WM.setTitle(win.id, `File Explorer — ${currentDir}`);
+          hintEl.textContent = `Backend: ${NexusStorage.backend}`;
+
+          const places = [
+            { label: 'Root (/)', path: '/' },
+            { label: 'Desktop', path: '/Desktop' },
+            { label: 'Documents', path: '/Documents' },
+            { label: 'Projects', path: '/Projects' },
+            { label: 'Webapp Demo', path: '/Projects/webapp' }
+          ].filter(p => VFS.exists(p.path));
+
+          sidebarEl.innerHTML = places.map(p => `
+            <button type="button" class="exp-nav-item ${currentDir === p.path ? 'active' : ''}" data-nav="${escapeHtml(p.path)}">
+              <span>${escapeHtml(p.label)}</span>
+            </button>
+          `).join('');
+
+          const segs = currentDir === '/' ? [''] : currentDir.split('/');
+          let built = '';
+          crumbsEl.innerHTML = segs.map((s, idx) => {
+            built = idx === 0 ? '/' : (built === '/' ? '/' + s : built + '/' + s);
+            const label = idx === 0 ? '/' : s;
+            const isLast = idx === segs.length - 1;
+            return `<button type="button" class="exp-crumb ${isLast ? 'current' : ''}" data-crumb="${escapeHtml(built)}">${escapeHtml(label)}</button>${!isLast && idx > 0 ? '<span style="color:var(--muted)">/</span>' : ''}`;
+          }).join('');
+
+          let entries = VFS.list(currentDir);
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            entries = entries.filter(e => e.name.toLowerCase().includes(q));
+          }
+
+          if (selectedPath && !VFS.exists(selectedPath)) selectedPath = null;
+          const selStat = selectedPath ? VFS.stat(selectedPath) : null;
+          const isProtected = selectedPath === '/Desktop';
+          renameBtn.disabled = !selectedPath || isProtected;
+          deleteBtn.disabled = !selectedPath || isProtected;
+          downloadBtn.disabled = !selStat || selStat.type !== 'file';
+          countEl.textContent = `${entries.length} item${entries.length === 1 ? '' : 's'}${selectedPath ? ' • Selected: ' + VFS.basename(selectedPath) : ''}`;
+
+          if (!entries.length) {
+            mainEl.innerHTML = `
+              <div class="empty-state">
+                <div>This folder is empty.</div>
+                <div style="font-size:12px">Use <strong>+ File</strong> or <strong>+ Folder</strong> above, or run commands in Terminal.</div>
+              </div>
+            `;
+            return;
+          }
+
+          if (viewMode === 'grid') {
+            mainEl.innerHTML = `<div class="exp-grid">${entries.map(e => `
+              <div class="exp-card ${selectedPath === e.path ? 'selected' : ''}" data-path="${escapeHtml(e.path)}" tabindex="0" role="button" aria-label="${escapeHtml(e.name)}">
+                <div style="color:${e.type === 'dir' ? 'var(--accent)' : 'var(--ink-secondary)'}">
+                  ${e.type === 'dir' ? ICONS.folder : (/\.(html|css|js|json)$/i.test(e.name) ? ICONS.fileCode : ICONS.fileText)}
+                </div>
+                <div class="exp-card-name">${escapeHtml(e.name)}</div>
+                <div class="exp-card-meta">${e.type === 'dir' ? 'Folder' : formatBytes(e.size)}</div>
+              </div>
+            `).join('')}</div>`;
+          } else {
+            mainEl.innerHTML = `
+              <table class="exp-table">
+                <thead>
+                  <tr><th>Name</th><th>Type</th><th style="text-align:right">Size</th><th>Modified</th></tr>
+                </thead>
+                <tbody>
+                  ${entries.map(e => `
+                    <tr class="${selectedPath === e.path ? 'selected' : ''}" data-path="${escapeHtml(e.path)}" tabindex="0">
+                      <td><strong>${e.type === 'dir' ? '📁 ' : '📄 '}${escapeHtml(e.name)}</strong></td>
+                      <td>${e.type === 'dir' ? 'Directory' : ((e.name.includes('.') ? e.name.split('.').pop().toUpperCase() : 'TEXT') + ' File')}</td>
+                      <td style="text-align:right">${e.type === 'dir' ? '—' : formatBytes(e.size)}</td>
+                      <td>${new Date(e.mtime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            `;
+          }
+        }
+
+        win.bodyEl.querySelector('.exp-toolbar').addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-act]');
+          if (btn) {
+            const act = btn.dataset.act;
+            if (act === 'up') navigate(VFS.parent(currentDir));
+            if (act === 'new-file') openPrompt('new-file');
+            if (act === 'new-dir') openPrompt('new-dir');
+            if (act === 'rename' && selectedPath) openPrompt('rename');
+            if (act === 'delete' && selectedPath) openPrompt('delete');
+            if (act === 'download' && selectedPath && VFS.stat(selectedPath)?.type === 'file') {
+              triggerDownload(VFS.basename(selectedPath), VFS.readFile(selectedPath));
+            }
+            if (act === 'view') {
+              viewMode = viewMode === 'grid' ? 'table' : 'grid';
+              viewBtn.textContent = viewMode === 'grid' ? 'Details' : 'Grid';
+              render();
+            }
+          }
+          const crumb = e.target.closest('button[data-crumb]');
+          if (crumb) navigate(crumb.dataset.crumb);
+        });
+
+        sidebarEl.addEventListener('click', (e) => {
+          const nav = e.target.closest('button[data-nav]');
+          if (nav) navigate(nav.dataset.nav);
+        });
+
+        searchInput.addEventListener('input', () => {
+          searchQuery = searchInput.value.trim();
+          render();
+        });
+
+        mainEl.addEventListener('click', (e) => {
+          const item = e.target.closest('[data-path]');
+          selectedPath = item ? item.dataset.path : null;
+          render();
+        });
+
+        mainEl.addEventListener('dblclick', (e) => {
+          const item = e.target.closest('[data-path]');
+          if (!item) return;
+          const st = VFS.stat(item.dataset.path);
+          if (st) openItem({ path: item.dataset.path, type: st.type });
+        });
+
+        mainEl.addEventListener('keydown', (e) => {
+          const item = e.target.closest('[data-path]');
+          if (item && e.key === 'Enter') {
+            const st = VFS.stat(item.dataset.path);
+            if (st) openItem({ path: item.dataset.path, type: st.type });
+          } else if (e.key === 'Delete' && selectedPath && selectedPath !== '/Desktop') {
+            openPrompt('delete');
+          }
+        });
+
+        win.cleanupFns.push(Bus.on('fs:change', render));
+        render();
+
+        return {
+          onLaunchArgs(nextArgs) {
+            if (nextArgs && nextArgs.path) navigate(nextArgs.path);
+          }
+        };
+      };
+
+      /* ---------------- 7B. TERMINAL ---------------- */
+      AppMount.terminal = (win, args = {}) => {
+        let cwd = args.cwd && VFS.exists(args.cwd) ? VFS.normalize(args.cwd) : '/Projects/webapp';
+        const history = [];
+        let histIdx = -1;
+
+        win.bodyEl.innerHTML = `
+          <div class="term-root" tabindex="-1">
+            <div class="term-output"></div>
+            <div class="term-input-row">
+              <span class="term-prompt">operator@nexus:<span class="term-cwd"></span>$</span>
+              <input type="text" class="term-input" spellcheck="false" autocomplete="off" aria-label="Terminal command input">
+            </div>
+          </div>
+        `;
+
+        const rootEl = win.bodyEl.querySelector('.term-root');
+        const outEl = win.bodyEl.querySelector('.term-output');
+        const cwdEl = win.bodyEl.querySelector('.term-cwd');
+        const inputEl = win.bodyEl.querySelector('.term-input');
+
+        function updatePrompt() {
+          cwdEl.textContent = cwd;
+          WM.setTitle(win.id, `Terminal — ${cwd}`);
+        }
+
+        function print(text, cls = '') {
+          const div = document.createElement('div');
+          div.className = 'term-line' + (cls ? ' ' + cls : '');
+          div.textContent = text;
+          outEl.appendChild(div);
+          rootEl.scrollTop = rootEl.scrollHeight;
+        }
+
+        print('NEXUS OS Shell v2.5 — Connected to shared Virtual Filesystem.', 'accent');
+        print('Type "help" for commands. Supports > / >> file redirection and Tab completion.', 'muted');
+        updatePrompt();
+
+        rootEl.addEventListener('click', () => {
+          if (window.getSelection()?.toString()) return;
+          inputEl.focus();
+        });
+
+        function tokenize(line) {
+          const tokens = [];
+          let cur = '';
+          let quote = null;
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (quote) {
+              if (ch === quote) quote = null;
+              else cur += ch;
+            } else if (ch === '"' || ch === "'") {
+              quote = ch;
+            } else if (/\s/.test(ch)) {
+              if (cur) { tokens.push(cur); cur = ''; }
+            } else {
+              cur += ch;
+            }
+          }
+          if (cur) tokens.push(cur);
+          return tokens;
+        }
+
+        function buildTreeLines(dirPath, prefix = '') {
+          const entries = VFS.list(dirPath);
+          let lines = [];
+          entries.forEach((entry, idx) => {
+            const last = idx === entries.length - 1;
+            const branch = last ? '└── ' : '├── ';
+            lines.push(prefix + branch + entry.name + (entry.type === 'dir' ? '/' : ''));
+            if (entry.type === 'dir') {
+              lines = lines.concat(buildTreeLines(entry.path, prefix + (last ? '    ' : '│   ')));
+            }
+          });
+          return lines;
+        }
+
+        async function runCommand(raw) {
+          const trimmed = raw.trim();
+          print(`operator@nexus:${cwd}$ ${raw}`);
+          if (!trimmed) return;
+
+          history.push(raw);
+          histIdx = history.length;
+
+          let redirMode = null;
+          let redirTarget = null;
+          let cmdPart = trimmed;
+
+          const appendMatch = trimmed.match(/^(.*?)\s*>>\s*([^\s>]+)\s*$/);
+          const writeMatch = !appendMatch && trimmed.match(/^(.*?)\s*>\s*([^\s>]+)\s*$/);
+          if (appendMatch) {
+            cmdPart = appendMatch[1];
+            redirTarget = VFS.normalize(appendMatch[2], cwd);
+            redirMode = 'append';
+          } else if (writeMatch) {
+            cmdPart = writeMatch[1];
+            redirTarget = VFS.normalize(writeMatch[2], cwd);
+            redirMode = 'write';
+          }
+
+          const argsList = tokenize(cmdPart);
+          const cmd = (argsList.shift() || '').toLowerCase();
+          const capturedOutput = [];
+
+          const emitOut = (txt, cls = '') => {
+            if (redirMode) capturedOutput.push(txt);
+            else print(txt, cls);
+          };
+
+          try {
+            switch (cmd) {
+              case 'help':
+                emitOut([
+                  'Available NEXUS OS shell commands:',
+                  '  ls [-l] [path]         List directory contents',
+                  '  tree [path]            Render directory hierarchy tree',
+                  '  cd <dir>               Change working directory',
+                  '  pwd                    Print working directory',
+                  '  cat <file>             Print file contents',
+                  '  wc <file>              Count lines, words, and bytes in file',
+                  '  touch <file>           Create empty file or update timestamp',
+                  '  mkdir <dir>            Create new directory',
+                  '  echo <text> [> file]   Print text or redirect (> / >>) into file',
+                  '  cp <src> <dest>        Copy file or directory',
+                  '  mv <src> <dest>        Move or rename file/directory',
+                  '  rm [-r] <path>         Remove file or directory (-r recursive)',
+                  '  find [term]            Search paths under current directory',
+                  '  grep <pattern> <file>  Filter matching lines in file',
+                  '  open <app|path>        Open app (explorer/editor/monitor/settings) or path',
+                  '  ps                     List active OS processes & open windows',
+                  '  kill <pid>             Close running window by PID',
+                  '  df                     Show virtual storage usage & backend',
+                  '  theme <name>           Set theme (obsidian|violet|emerald|amber|daylight)',
+                  '  history | uptime | date | whoami | uname | clear'
+                ].join('\n'));
+                break;
+
+              case 'clear':
+                outEl.innerHTML = '';
+                return;
+
+              case 'pwd':
+                emitOut(cwd);
+                break;
+
+              case 'whoami':
+                emitOut('operator');
+                break;
+
+              case 'uname':
+                emitOut('NEXUS-OS 2.5.0 browser-x64 VanillaJS-Kernel');
+                break;
+
+              case 'date':
+                emitOut(new Date().toString());
+                break;
+
+              case 'uptime': {
+                const sec = Math.floor((Date.now() - BOOT_TIME) / 1000);
+                const m = Math.floor(sec / 60);
+                const s = sec % 60;
+                emitOut(`up ${m}m ${s}s, ${WM.windows.size} active window(s), load avg: ${(Telemetry.cpu / 100).toFixed(2)}`);
+                break;
+              }
+
+              case 'history':
+                emitOut(history.map((h, i) => `  ${String(i + 1).padStart(3, ' ')}  ${h}`).join('\n'));
+                break;
+
+              case 'cd': {
+                const target = VFS.normalize(argsList[0] || '/', cwd);
+                const st = VFS.stat(target);
+                if (!st) throw new Error(`cd: no such directory: ${target}`);
+                if (st.type !== 'dir') throw new Error(`cd: not a directory: ${target}`);
+                cwd = target;
+                updatePrompt();
+                break;
+              }
+
+              case 'ls': {
+                const flags = argsList.filter(a => a.startsWith('-')).join('');
+                const pathArg = argsList.find(a => !a.startsWith('-')) || cwd;
+                const target = VFS.normalize(pathArg, cwd);
+                const st = VFS.stat(target);
+                if (!st) throw new Error(`ls: cannot access '${pathArg}': No such file or directory`);
+                if (st.type === 'file') {
+                  emitOut(VFS.basename(target));
+                  break;
+                }
+                const items = VFS.list(target);
+                if (!items.length) break;
+                if (flags.includes('l')) {
+                  const lines = items.map(i => {
+                    const perm = i.type === 'dir' ? 'drwxr-xr-x' : '-rw-r--r--';
+                    const sz = String(i.size).padStart(7, ' ');
+                    const dt = new Date(i.mtime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return `${perm}  operator  ${sz}  ${dt}  ${i.name}${i.type === 'dir' ? '/' : ''}`;
+                  });
+                  emitOut(lines.join('\n'));
+                } else {
+                  emitOut(items.map(i => i.type === 'dir' ? i.name + '/' : i.name).join('   '));
+                }
+                break;
+              }
+
+              case 'tree': {
+                const target = VFS.normalize(argsList[0] || cwd, cwd);
+                const st = VFS.stat(target);
+                if (!st || st.type !== 'dir') throw new Error(`tree: not a directory: ${target}`);
+                const lines = [target, ...buildTreeLines(target)];
+                emitOut(lines.join('\n'));
+                break;
+              }
+
+              case 'cat': {
+                if (!argsList.length) throw new Error('cat: missing file operand');
+                const out = argsList.map(p => VFS.readFile(VFS.normalize(p, cwd))).join('\n');
+                emitOut(out);
+                break;
+              }
+
+              case 'wc': {
+                if (!argsList.length) throw new Error('wc: missing file operand');
+                const target = VFS.normalize(argsList[0], cwd);
+                const content = VFS.readFile(target);
+                const lines = content ? content.split('\n').length : 0;
+                const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+                const bytes = new Blob([content]).size;
+                emitOut(`  ${lines} lines   ${words} words   ${bytes} bytes   ${target}`);
+                break;
+              }
+
+              case 'echo':
+                emitOut(argsList.join(' '));
+                break;
+
+              case 'touch': {
+                if (!argsList.length) throw new Error('touch: missing file operand');
+                for (const p of argsList) {
+                  const full = VFS.normalize(p, cwd);
+                  if (VFS.exists(full)) {
+                    const st = VFS.stat(full);
+                    if (st.type === 'file') await VFS.writeFile(full, st.content);
+                  } else {
+                    await VFS.writeFile(full, '');
+                  }
+                }
+                break;
+              }
+
+              case 'mkdir': {
+                if (!argsList.length) throw new Error('mkdir: missing directory operand');
+                for (const p of argsList) {
+                  await VFS.mkdir(VFS.normalize(p, cwd));
+                }
+                break;
+              }
+
+              case 'rm': {
+                const recursive = argsList.includes('-r') || argsList.includes('-rf');
+                const targets = argsList.filter(a => !a.startsWith('-'));
+                if (!targets.length) throw new Error('rm: missing operand');
+                for (const t of targets) {
+                  await VFS.remove(VFS.normalize(t, cwd), recursive);
+                }
+                break;
+              }
+
+              case 'mv': {
+                if (argsList.length < 2) throw new Error('mv: usage: mv <source> <dest>');
+                await VFS.move(VFS.normalize(argsList[0], cwd), VFS.normalize(argsList[1], cwd));
+                break;
+              }
+
+              case 'cp': {
+                if (argsList.length < 2) throw new Error('cp: usage: cp <source> <dest>');
+                await VFS.copy(VFS.normalize(argsList[0], cwd), VFS.normalize(argsList[1], cwd));
+                break;
+              }
+
+              case 'find': {
+                const term = (argsList[0] || '').toLowerCase();
+                const prefix = cwd === '/' ? '/' : cwd + '/';
+                const matches = Object.keys(VFS.nodes)
+                  .filter(k => (k === cwd || k.startsWith(prefix)) && (!term || k.toLowerCase().includes(term)))
+                  .sort();
+                emitOut(matches.join('\n') || '(no matches)');
+                break;
+              }
+
+              case 'grep': {
+                if (argsList.length < 2) throw new Error('grep: usage: grep <pattern> <file>');
+                const pattern = argsList[0].toLowerCase();
+                const content = VFS.readFile(VFS.normalize(argsList[1], cwd));
+                const hits = content
+                  .split('\n')
+                  .map((line, i) => `${i + 1}: ${line}`)
+                  .filter(line => line.toLowerCase().includes(pattern));
+                emitOut(hits.length ? hits.join('\n') : '(no matching lines)');
+                break;
+              }
+
+              case 'df': {
+                const st = VFS.stats();
+                emitOut([
+                  'Backend            Files   Dirs   Persisted Size',
+                  `${NexusStorage.backend.padEnd(18, ' ')} ${String(st.files).padEnd(7, ' ')} ${String(st.dirs).padEnd(6, ' ')} ${formatBytes(st.bytes)}`
+                ].join('\n'));
+                break;
+              }
+
+              case 'ps': {
+                const lines = [
+                  'PID    STATE      NAME',
+                  '1      system     nexus-compositor',
+                  '2      system     vfs-storage-daemon'
+                ];
+                for (const w of WM.windows.values()) {
+                  const state = w.minimized ? 'minimized' : (WM.activeId === w.id ? 'active' : 'running');
+                  lines.push(`${String(w.pid).padEnd(6, ' ')} ${state.padEnd(10, ' ')} ${w.title}`);
+                }
+                emitOut(lines.join('\n'));
+                break;
+              }
+
+              case 'kill': {
+                const pid = Number(argsList[0]);
+                if (!pid) throw new Error('kill: specify a window PID from "ps"');
+                if (pid <= 2) throw new Error('kill: cannot terminate protected kernel daemon');
+                const found = [...WM.windows.values()].find(w => w.pid === pid);
+                if (!found) throw new Error(`kill: no window with PID ${pid}`);
+                WM.close(found.id);
+                print(`Terminated process ${pid} (${found.title})`, 'success');
+                break;
+              }
+
+              case 'open': {
+                const target = argsList[0];
+                if (!target) throw new Error('open: specify an app id or file path');
+                if (APPS[target]) {
+                  WM.open(target);
+                  print(`Launched ${APPS[target].name}`, 'success');
+                } else {
+                  const full = VFS.normalize(target, cwd);
+                  const st = VFS.stat(full);
+                  if (!st) throw new Error(`open: no app or path matching '${target}'`);
+                  if (st.type === 'dir') WM.open('explorer', { path: full });
+                  else WM.open('editor', { filePath: full });
+                  print(`Opened ${full}`, 'success');
+                }
+                break;
+              }
+
+              case 'theme': {
+                const t = (argsList[0] || '').toLowerCase();
+                const valid = ['obsidian', 'violet', 'emerald', 'amber', 'daylight'];
+                if (!valid.includes(t)) throw new Error(`theme: choose one of ${valid.join(', ')}`);
+                await SettingsState.update({ theme: t });
+                print(`Switched theme to ${t}`, 'success');
+                break;
+              }
+
+              default:
+                throw new Error(`${cmd}: command not found (type "help")`);
+            }
+
+            if (redirMode && redirTarget) {
+              const payload = capturedOutput.join('\n');
+              if (redirMode === 'append' && VFS.exists(redirTarget)) {
+                const prev = VFS.readFile(redirTarget);
+                await VFS.writeFile(redirTarget, prev ? prev + '\n' + payload : payload);
+              } else {
+                await VFS.writeFile(redirTarget, payload);
+              }
+            }
+          } catch (err) {
+            print(err.message, 'error');
+          }
+        }
+
+        inputEl.addEventListener('keydown', (e) => {
+          if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+            e.preventDefault();
+            outEl.innerHTML = '';
+            return;
+          }
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = inputEl.value;
+            inputEl.value = '';
+            runCommand(val);
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (history.length && histIdx > 0) {
+              histIdx--;
+              inputEl.value = history[histIdx];
+            }
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (histIdx < history.length - 1) {
+              histIdx++;
+              inputEl.value = history[histIdx];
+            } else {
+              histIdx = history.length;
+              inputEl.value = '';
+            }
+          } else if (e.key === 'Tab') {
+            e.preventDefault();
+            const val = inputEl.value;
+            const parts = val.split(/\s+/);
+            if (parts.length <= 1) {
+              const cmds = ['help','ls','tree','cd','pwd','cat','wc','touch','mkdir','echo','cp','mv','rm','find','grep','open','ps','kill','df','theme','history','uptime','clear','date','whoami','uname'];
+              const match = cmds.find(c => c.startsWith(parts[0]));
+              if (match) inputEl.value = match + ' ';
+            } else {
+              const partial = parts[parts.length - 1];
+              try {
+                const entries = VFS.list(cwd);
+                const hit = entries.find(en => en.name.startsWith(partial));
+                if (hit) {
+                  parts[parts.length - 1] = hit.name + (hit.type === 'dir' ? '/' : '');
+                  inputEl.value = parts.join(' ');
+                }
+              } catch (_) {}
+            }
+          }
+        });
+
+        // Sync CWD if deleted externally
+        win.cleanupFns.push(Bus.on('fs:change', () => {
+          if (!VFS.exists(cwd)) {
+            cwd = '/';
+            updatePrompt();
+          }
+        }));
+
+        setTimeout(() => inputEl.focus(), 20);
+        return {
+          onFocus() { inputEl.focus(); }
+        };
+      };
+
+      /* ---------------- 7C. CODE STUDIO (HTML/CSS/JS Editor + Sandboxed Live Preview) ---------------- */
+      AppMount.editor = (win, args = {}) => {
+        const PROJECT_FILES = [
+          '/Projects/webapp/index.html',
+          '/Projects/webapp/style.css',
+          '/Projects/webapp/script.js'
+        ];
+        let openTabs = [...PROJECT_FILES].filter(p => VFS.exists(p));
+        if (!openTabs.length) {
+          const all = VFS.allFiles();
+          if (all.length) openTabs = [all[0]];
+        }
+        if (args.filePath && VFS.exists(args.filePath) && VFS.stat(args.filePath).type === 'file') {
+          const norm = VFS.normalize(args.filePath);
+          if (!openTabs.includes(norm)) openTabs.push(norm);
+        }
+
+        let activeFile = (args.filePath && VFS.normalize(args.filePath)) || openTabs[0] || '';
+        const buffers = new Map();
+        const dirty = new Set();
+        let autoRun = true;
+        let layout = 'split';
+        let previewTimer = null;
+        const channelId = 'preview-' + win.id;
+
+        function ensureBuffer(path) {
+          if (path && !buffers.has(path)) {
+            try { buffers.set(path, VFS.readFile(path)); }
+            catch (_) { buffers.set(path, ''); }
+          }
+        }
+        openTabs.forEach(ensureBuffer);
+
+        win.bodyEl.innerHTML = `
+          <div class="ed-root">
+            <div class="ed-toolbar">
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <select class="input" data-role="file-picker" aria-label="Open file from Virtual Filesystem"></select>
+                <button type="button" class="btn btn-sm btn-primary" data-act="save" title="Save File (Ctrl/Cmd+S)">Save</button>
+                <button type="button" class="btn btn-sm" data-act="run" title="Run Sandboxed Preview">Run</button>
+                <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-secondary);cursor:pointer">
+                  <input type="checkbox" data-role="autorun" checked> Auto-run
+                </label>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button type="button" class="btn btn-sm" data-layout="split">Split</button>
+                <button type="button" class="btn btn-sm" data-layout="code">Code</button>
+                <button type="button" class="btn btn-sm" data-layout="preview">Preview</button>
+              </div>
+            </div>
+            <div class="ed-tabs" role="tablist"></div>
+            <div class="ed-workspace" data-layout="split">
+              <div class="ed-code-pane">
+                <div class="ed-editor-wrap">
+                  <div class="ed-gutter" aria-hidden="true">1</div>
+                  <textarea class="ed-textarea" spellcheck="false" aria-label="Source Code Editor"></textarea>
+                </div>
+              </div>
+              <div class="ed-preview-pane">
+                <div class="ed-preview-header">
+                  <span>Sandboxed Preview (<code>sandbox="allow-scripts"</code>)</span>
+                  <span data-role="preview-target">/Projects/webapp</span>
+                </div>
+                <iframe class="ed-iframe" sandbox="allow-scripts" title="Sandboxed Live Preview"></iframe>
+                <div class="ed-console">
+                  <div class="ed-console-bar">
+                    <span>Sandbox Console</span>
+                    <div style="display:flex;gap:6px">
+                      <button type="button" class="btn btn-sm" data-act="clear-console" style="padding:1px 6px;font-size:11px">Clear</button>
+                      <button type="button" class="btn btn-sm" data-act="toggle-console" style="padding:1px 6px;font-size:11px">Toggle</button>
+                    </div>
+                  </div>
+                  <div class="ed-console-logs"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const pickerEl = win.bodyEl.querySelector('[data-role="file-picker"]');
+        const tabsEl = win.bodyEl.querySelector('.ed-tabs');
+        const workspaceEl = win.bodyEl.querySelector('.ed-workspace');
+        const textarea = win.bodyEl.querySelector('.ed-textarea');
+        const gutter = win.bodyEl.querySelector('.ed-gutter');
+        const iframe = win.bodyEl.querySelector('.ed-iframe');
+        const previewTargetEl = win.bodyEl.querySelector('[data-role="preview-target"]');
+        const consoleEl = win.bodyEl.querySelector('.ed-console');
+        const logsEl = win.bodyEl.querySelector('.ed-console-logs');
+        const autoRunChk = win.bodyEl.querySelector('[data-role="autorun"]');
+
+        function updateGutter() {
+          const lines = (textarea.value.match(/\n/g)?.length || 0) + 1;
+          let out = '';
+          for (let i = 1; i <= lines; i++) out += i + '\n';
+          gutter.textContent = out;
+        }
+
+        function refreshPicker() {
+          const all = VFS.allFiles();
+          pickerEl.innerHTML = all.map(p => `<option value="${escapeHtml(p)}" ${p === activeFile ? 'selected' : ''}>${escapeHtml(p)}</option>`).join('');
+        }
+
+        function renderTabs() {
+          tabsEl.innerHTML = openTabs.map(p => `
+            <button type="button" class="ed-tab ${p === activeFile ? 'active' : ''}" data-tab="${escapeHtml(p)}">
+              <span>${escapeHtml(VFS.basename(p))}</span>
+              ${dirty.has(p) ? '<span class="dirty-dot" title="Unsaved changes"></span>' : ''}
+              ${openTabs.length > 1 ? `<span class="ed-tab-close" data-close-tab="${escapeHtml(p)}" title="Close tab">×</span>` : ''}
+            </button>
+          `).join('');
+          WM.setTitle(win.id, `Code Studio — ${activeFile || 'No file'}${dirty.has(activeFile) ? ' •' : ''}`);
+        }
+
+        function loadActiveIntoEditor() {
+          if (!activeFile) {
+            textarea.value = '';
+            updateGutter();
+            renderTabs();
+            return;
+          }
+          ensureBuffer(activeFile);
+          textarea.value = buffers.get(activeFile) ?? '';
+          updateGutter();
+          refreshPicker();
+          renderTabs();
+        }
+
+        function openFileInStudio(path) {
+          const norm = VFS.normalize(path);
+          if (!VFS.exists(norm) || VFS.stat(norm).type !== 'file') return;
+          if (!openTabs.includes(norm)) openTabs.push(norm);
+          if (!dirty.has(norm)) buffers.set(norm, VFS.readFile(norm));
+          activeFile = norm;
+          loadActiveIntoEditor();
+          runPreview();
+        }
+
+        async function saveActive() {
+          if (!activeFile) return;
+          const val = buffers.get(activeFile) ?? '';
+          await VFS.writeFile(activeFile, val);
+          dirty.delete(activeFile);
+          renderTabs();
+          runPreview();
+          notify(`Saved ${VFS.basename(activeFile)}`);
+        }
+
+        function getEffectiveContent(path) {
+          if (buffers.has(path)) return buffers.get(path);
+          if (VFS.exists(path)) return VFS.readFile(path);
+          return '';
+        }
+
+        function runPreview() {
+          logsEl.innerHTML = '';
+          if (!activeFile) return;
+          const dir = VFS.parent(activeFile);
+          let html = '';
+          let css = '';
+          let js = '';
+
+          const dirHtml = VFS.normalize('index.html', dir);
+          const dirCss = VFS.normalize('style.css', dir);
+          const dirJs = VFS.normalize('script.js', dir);
+
+          if (activeFile.endsWith('.html') && VFS.basename(activeFile) !== 'index.html') {
+            html = getEffectiveContent(activeFile);
+            previewTargetEl.textContent = activeFile;
+          } else if (VFS.exists(dirHtml) || buffers.has(dirHtml)) {
+            html = getEffectiveContent(dirHtml);
+            css = getEffectiveContent(dirCss);
+            js = getEffectiveContent(dirJs);
+            previewTargetEl.textContent = dir;
+          } else if (activeFile.endsWith('.js')) {
+            html = '<div style="font-family:system-ui;padding:16px;color:#334155">Executing standalone script in sandbox console...</div>';
+            js = getEffectiveContent(activeFile);
+            previewTargetEl.textContent = activeFile;
+          } else {
+            const safeText = escapeHtml(getEffectiveContent(activeFile));
+            html = `<pre style="margin:0;padding:16px;font-family:monospace;white-space:pre-wrap;color:#0f172a">${safeText}</pre>`;
+            previewTargetEl.textContent = activeFile;
+          }
+
+          const bridge = [
+            '<script>',
+            '(function() {',
+            '  var cid = ' + JSON.stringify(channelId) + ';',
+            '  function send(level, args) {',
+            '    try {',
+            '      var msg = Array.prototype.slice.call(args).map(function(a) {',
+            '        if (typeof a === "object") { try { return JSON.stringify(a); } catch(_) { return String(a); } }',
+            '        return String(a);',
+            '      }).join(" ");',
+            '      parent.postMessage({ source: "nexus-sandbox", cid: cid, level: level, msg: msg }, "*");',
+            '    } catch (_) {}',
+            '  }',
+            '  var oLog = console.log, oWarn = console.warn, oErr = console.error;',
+            '  console.log = function() { send("log", arguments); oLog.apply(console, arguments); };',
+            '  console.warn = function() { send("warn", arguments); oWarn.apply(console, arguments); };',
+            '  console.error = function() { send("error", arguments); oErr.apply(console, arguments); };',
+            '  window.addEventListener("error", function(e) { send("error", [e.message + " (line " + e.lineno + ")"]); });',
+            '})();',
+            '<\/script>'
+          ].join('\n');
+
+          const safeJs = js.replace(/<\/script>/gi, '<\\/script>');
+          iframe.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><style>' + css + '</style>' + bridge + '</head><body>' + html + '<script>' + safeJs + '<\/script></body></html>';
+        }
+
+        function onSandboxMsg(e) {
+          const d = e.data;
+          if (!d || d.source !== 'nexus-sandbox' || d.cid !== channelId) return;
+          const row = document.createElement('div');
+          if (d.level === 'warn') row.className = 'log-warn';
+          if (d.level === 'error') row.className = 'log-error';
+          row.textContent = `[${d.level}] ${d.msg}`;
+          logsEl.appendChild(row);
+          logsEl.scrollTop = logsEl.scrollHeight;
+        }
+        window.addEventListener('message', onSandboxMsg);
+        win.cleanupFns.push(() => window.removeEventListener('message', onSandboxMsg));
+
+        textarea.addEventListener('scroll', () => {
+          gutter.scrollTop = textarea.scrollTop;
+        });
+
+        textarea.addEventListener('input', () => {
+          if (!activeFile) return;
+          buffers.set(activeFile, textarea.value);
+          dirty.add(activeFile);
+          updateGutter();
+          renderTabs();
+          if (autoRun) {
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(runPreview, 260);
+          }
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            saveActive();
+          } else if (e.key === 'Tab') {
+            e.preventDefault();
+            const s = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.slice(0, s) + '  ' + textarea.value.slice(end);
+            textarea.selectionStart = textarea.selectionEnd = s + 2;
+            textarea.dispatchEvent(new Event('input'));
+          }
+        });
+
+        tabsEl.addEventListener('click', (e) => {
+          const closeTarget = e.target.closest('[data-close-tab]')?.dataset.closeTab;
+          if (closeTarget && openTabs.length > 1) {
+            e.stopPropagation();
+            openTabs = openTabs.filter(t => t !== closeTarget);
+            if (activeFile === closeTarget) activeFile = openTabs[0];
+            loadActiveIntoEditor();
+            runPreview();
+            return;
+          }
+          const tab = e.target.closest('button[data-tab]');
+          if (!tab) return;
+          activeFile = tab.dataset.tab;
+          loadActiveIntoEditor();
+          runPreview();
+        });
+
+        pickerEl.addEventListener('change', () => {
+          openFileInStudio(pickerEl.value);
+        });
+
+        autoRunChk.addEventListener('change', () => {
+          autoRun = autoRunChk.checked;
+        });
+
+        win.bodyEl.addEventListener('click', (e) => {
+          const act = e.target.closest('button[data-act]')?.dataset.act;
+          if (act === 'save') saveActive();
+          if (act === 'run') runPreview();
+          if (act === 'clear-console') logsEl.innerHTML = '';
+          if (act === 'toggle-console') consoleEl.classList.toggle('collapsed');
+
+          const lay = e.target.closest('button[data-layout]')?.dataset.layout;
+          if (lay) {
+            layout = lay;
+            workspaceEl.dataset.layout = layout;
+          }
+        });
+
+        win.cleanupFns.push(Bus.on('fs:change', () => {
+          for (const p of [...openTabs]) {
+            if (!VFS.exists(p)) {
+              openTabs = openTabs.filter(t => t !== p);
+              buffers.delete(p);
+              dirty.delete(p);
+            } else if (!dirty.has(p)) {
+              buffers.set(p, VFS.readFile(p));
+            }
+          }
+          if (!openTabs.includes(activeFile)) {
+            activeFile = openTabs[0] || VFS.allFiles()[0] || '';
+            if (activeFile && !openTabs.includes(activeFile)) openTabs.push(activeFile);
+          }
+          if (activeFile && !dirty.has(activeFile)) {
+            textarea.value = buffers.get(activeFile) || '';
+            updateGutter();
+          }
+          refreshPicker();
+          renderTabs();
+        }));
+
+        loadActiveIntoEditor();
+        runPreview();
+
+        return {
+          onLaunchArgs(nextArgs) {
+            if (nextArgs && nextArgs.filePath) openFileInStudio(nextArgs.filePath);
+          }
+        };
+      };
+
+      /* ---------------- 7D. SYSTEM MONITOR ---------------- */
+      const Telemetry = {
+        cpu: 14,
+        mem: 38,
+        netRx: 120,
+        netTx: 44,
+        cpuHist: Array(40).fill(14),
+        memHist: Array(40).fill(38),
+
+        tick() {
+          const winLoad = WM.windows.size * 4.2;
+          const targetCpu = Math.min(96, Math.max(6, 10 + winLoad + (Math.random() * 18 - 7)));
+          this.cpu = Math.round(this.cpu * 0.55 + targetCpu * 0.45);
+
+          const fsStats = VFS.stats();
+          const targetMem = Math.min(92, Math.max(22, 28 + WM.windows.size * 5.5 + (fsStats.files * 0.5) + (Math.random() * 6 - 3)));
+          this.mem = Math.round(this.mem * 0.7 + targetMem * 0.3);
+
+          this.netRx = Math.max(12, Math.round(90 + Math.random() * 240));
+          this.netTx = Math.max(8, Math.round(30 + Math.random() * 110));
+
+          this.cpuHist.push(this.cpu);
+          if (this.cpuHist.length > 40) this.cpuHist.shift();
+          this.memHist.push(this.mem);
+          if (this.memHist.length > 40) this.memHist.shift();
+
+          const trayCpu = document.getElementById('tb-cpu-readout');
+          if (trayCpu) trayCpu.textContent = `CPU ${this.cpu}%`;
+          Bus.emit('telemetry:tick');
+        }
+      };
+      setInterval(() => Telemetry.tick(), 1000);
+
+      AppMount.monitor = (win) => {
+        let paused = false;
+
+        win.bodyEl.innerHTML = `
+          <div class="mon-root">
+            <div class="mon-header">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <strong style="font-size:15px">System Resource Monitor</strong>
+                <span class="badge badge-accent">Simulated Telemetry • Live Window Tasks</span>
+              </div>
+              <button type="button" class="btn btn-sm" data-act="pause">Pause Graphs</button>
+            </div>
+
+            <div class="mon-kpis">
+              <div class="mon-card">
+                <div class="mon-card-label"><span>CPU Load (Sim)</span><span data-k="cpu-pct">14%</span></div>
+                <div class="mon-card-val" data-k="cpu-big">14%</div>
+                <div class="mon-bar"><div class="mon-bar-fill" data-k="cpu-bar" style="width:14%"></div></div>
+              </div>
+              <div class="mon-card">
+                <div class="mon-card-label"><span>Memory Allocation (Sim)</span><span data-k="mem-pct">38%</span></div>
+                <div class="mon-card-val" data-k="mem-big">3.0 / 8.0 GB</div>
+                <div class="mon-bar"><div class="mon-bar-fill" data-k="mem-bar" style="width:38%"></div></div>
+              </div>
+              <div class="mon-card">
+                <div class="mon-card-label"><span>Network I/O (Sim)</span><span>RX / TX</span></div>
+                <div class="mon-card-val" data-k="net-big">120 / 44 KB/s</div>
+                <div style="font-size:11px;color:var(--muted)">Virtual Sandbox Bridge</div>
+              </div>
+              <div class="mon-card">
+                <div class="mon-card-label"><span>Virtual Filesystem</span><span data-k="fs-backend">IndexedDB</span></div>
+                <div class="mon-card-val" data-k="fs-big">0 files</div>
+                <div style="font-size:11px;color:var(--muted)" data-k="fs-bytes">0 B stored</div>
+              </div>
+            </div>
+
+            <div class="mon-charts">
+              <div class="mon-chart-box">
+                <div style="font-size:12px;font-weight:600;display:flex;justify-content:space-between">
+                  <span>CPU History (40s)</span>
+                  <span style="color:var(--accent)" data-k="cpu-chart-lbl">14%</span>
+                </div>
+                <canvas class="mon-canvas" data-canvas="cpu"></canvas>
+              </div>
+              <div class="mon-chart-box">
+                <div style="font-size:12px;font-weight:600;display:flex;justify-content:space-between">
+                  <span>Memory History (40s)</span>
+                  <span style="color:var(--success)" data-k="mem-chart-lbl">38%</span>
+                </div>
+                <canvas class="mon-canvas" data-canvas="mem"></canvas>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12.5px;font-weight:600;margin-bottom:6px">Active OS Processes & Open Windows</div>
+              <div class="mon-procs">
+                <table class="exp-table">
+                  <thead>
+                    <tr><th>PID</th><th>Process / Window</th><th>Status</th><th style="text-align:right">Sim CPU</th><th style="text-align:right">Actions</th></tr>
+                  </thead>
+                  <tbody data-role="proc-rows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const cpuCanvas = win.bodyEl.querySelector('[data-canvas="cpu"]');
+        const memCanvas = win.bodyEl.querySelector('[data-canvas="mem"]');
+        const procRows = win.bodyEl.querySelector('[data-role="proc-rows"]');
+        const pauseBtn = win.bodyEl.querySelector('[data-act="pause"]');
+
+        function drawChart(canvas, series, strokeColor, fillColor) {
+          const rect = canvas.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = Math.round(rect.width * dpr);
+          canvas.height = Math.round(rect.height * dpr);
+          const ctx = canvas.getContext('2d');
+          ctx.scale(dpr, dpr);
+          const w = rect.width;
+          const h = rect.height;
+
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.14)';
+          ctx.lineWidth = 1;
+          for (let i = 1; i <= 3; i++) {
+            const y = (h / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+          }
+
+          ctx.beginPath();
+          series.forEach((val, idx) => {
+            const x = (idx / (series.length - 1)) * w;
+            const y = h - (Math.min(100, Math.max(0, val)) / 100) * (h - 10) - 5;
+            if (idx === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fillStyle = fillColor;
+          ctx.fill();
+        }
+
+        function renderProcs() {
+          const rows = [
+            `<tr><td>1</td><td><strong>nexus-compositor</strong></td><td>System</td><td style="text-align:right">1.8%</td><td style="text-align:right;color:var(--muted)">Core</td></tr>`,
+            `<tr><td>2</td><td><strong>vfs-storage-daemon</strong></td><td>System</td><td style="text-align:right">0.6%</td><td style="text-align:right;color:var(--muted)">Core</td></tr>`
+          ];
+
+          for (const w of WM.windows.values()) {
+            const state = w.minimized ? 'Minimized' : (WM.activeId === w.id ? 'Focused' : 'Running');
+            const simCpu = ((w.pid % 5) * 0.9 + 1.4).toFixed(1) + '%';
+            rows.push(`
+              <tr>
+                <td>${w.pid}</td>
+                <td><strong>${escapeHtml(w.title)}</strong></td>
+                <td>${state}</td>
+                <td style="text-align:right">${simCpu}</td>
+                <td style="text-align:right">
+                  <button type="button" class="btn btn-sm" data-focus="${w.id}">Focus</button>
+                  <button type="button" class="btn btn-sm btn-danger" data-kill="${w.id}">End Task</button>
+                </td>
+              </tr>
+            `);
+          }
+          procRows.innerHTML = rows.join('');
+        }
+
+        function updateMetrics() {
+          if (paused) return;
+          const q = (s) => win.bodyEl.querySelector(s);
+          q('[data-k="cpu-pct"]').textContent = `${Telemetry.cpu}%`;
+          q('[data-k="cpu-big"]').textContent = `${Telemetry.cpu}%`;
+          q('[data-k="cpu-bar"]').style.width = `${Telemetry.cpu}%`;
+          q('[data-k="cpu-chart-lbl"]').textContent = `${Telemetry.cpu}%`;
+
+          const gb = ((Telemetry.mem / 100) * 8).toFixed(1);
+          q('[data-k="mem-pct"]').textContent = `${Telemetry.mem}%`;
+          q('[data-k="mem-big"]').textContent = `${gb} / 8.0 GB`;
+          q('[data-k="mem-bar"]').style.width = `${Telemetry.mem}%`;
+          q('[data-k="mem-chart-lbl"]').textContent = `${Telemetry.mem}%`;
+
+          q('[data-k="net-big"]').textContent = `${Telemetry.netRx} / ${Telemetry.netTx} KB/s`;
+
+          const st = VFS.stats();
+          q('[data-k="fs-backend"]').textContent = NexusStorage.backend;
+          q('[data-k="fs-big"]').textContent = `${st.files} files, ${st.dirs} dirs`;
+          q('[data-k="fs-bytes"]').textContent = `${formatBytes(st.bytes)} persisted`;
+
+          drawChart(cpuCanvas, Telemetry.cpuHist, '#38bdf8', 'rgba(56, 189, 248, 0.16)');
+          drawChart(memCanvas, Telemetry.memHist, '#34d399', 'rgba(52, 211, 153, 0.16)');
+          renderProcs();
+        }
+
+        pauseBtn.addEventListener('click', () => {
+          paused = !paused;
+          pauseBtn.textContent = paused ? 'Resume Graphs' : 'Pause Graphs';
+          if (!paused) updateMetrics();
+        });
+
+        procRows.addEventListener('click', (e) => {
+          const focusId = e.target.closest('button[data-focus]')?.dataset.focus;
+          if (focusId) {
+            const target = WM.windows.get(focusId);
+            if (target?.minimized) WM.restore(focusId);
+            else WM.focus(focusId);
+          }
+          const killId = e.target.closest('button[data-kill]')?.dataset.kill;
+          if (killId) WM.close(killId);
+        });
+
+        win.cleanupFns.push(Bus.on('telemetry:tick', updateMetrics));
+        win.cleanupFns.push(Bus.on('wm:change', renderProcs));
+        win.cleanupFns.push(Bus.on('fs:change', updateMetrics));
+        setTimeout(updateMetrics, 30);
+        return {};
+      };
+
+      /* ---------------- 7E. SETTINGS & THEMES ---------------- */
+      AppMount.settings = (win) => {
+        let section = 'appearance';
+        let confirmResetFs = false;
+
+        win.bodyEl.innerHTML = `
+          <div class="set-root">
+            <nav class="set-nav" aria-label="Settings Categories">
+              <button type="button" class="exp-nav-item active" data-sec="appearance">Appearance</button>
+              <button type="button" class="exp-nav-item" data-sec="shortcuts">Shortcuts</button>
+              <button type="button" class="exp-nav-item" data-sec="storage">Storage & Backup</button>
+            </nav>
+            <div class="set-content"></div>
+            <input type="file" accept=".json,application/json" data-role="import-input" style="display:none">
+          </div>
+        `;
+
+        const navEl = win.bodyEl.querySelector('.set-nav');
+        const contentEl = win.bodyEl.querySelector('.set-content');
+        const importInput = win.bodyEl.querySelector('[data-role="import-input"]');
+
+        function render() {
+          navEl.querySelectorAll('[data-sec]').forEach(b => b.classList.toggle('active', b.dataset.sec === section));
+          const s = SettingsState.data;
+
+          if (section === 'appearance') {
+            contentEl.innerHTML = `
+              <div class="set-group">
+                <h3>Color Theme</h3>
+                <div class="theme-swatches">
+                  ${[
+                    { id: 'obsidian', label: 'Obsidian Cyan', color: '#38bdf8', bg: '#0f172a' },
+                    { id: 'violet', label: 'Midnight Violet', color: '#a78bfa', bg: '#17122b' },
+                    { id: 'emerald', label: 'Emerald Matrix', color: '#34d399', bg: '#0e201b' },
+                    { id: 'amber', label: 'Amber Carbon', color: '#fbbf24', bg: '#1a140e' },
+                    { id: 'daylight', label: 'Daylight Slate', color: '#0284c7', bg: '#f8fafc' }
+                  ].map(t => `
+                    <button type="button" class="swatch-btn ${s.theme === t.id ? 'active' : ''}" data-theme-pick="${t.id}">
+                      <span class="swatch-dot" style="background:linear-gradient(135deg, ${t.bg} 45%, ${t.color} 55%)"></span>
+                      <span>${t.label}</span>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="set-group">
+                <h3>Desktop Wallpaper</h3>
+                <div class="theme-swatches">
+                  ${[
+                    { id: 'aurora', label: 'Aurora Nebula' },
+                    { id: 'grid', label: 'Tactical Grid' },
+                    { id: 'mesh', label: 'Conic Mesh' },
+                    { id: 'matte', label: 'Minimal Matte' }
+                  ].map(w => `
+                    <button type="button" class="swatch-btn ${s.wallpaper === w.id ? 'active' : ''}" data-wp-pick="${w.id}">
+                      <span>${w.label}</span>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="set-group">
+                <h3>Interface & Accessibility</h3>
+                <div class="set-row">
+                  <div>
+                    <div style="font-weight:600">UI Font Scale</div>
+                    <div style="font-size:12px;color:var(--muted)">Adjust global typography sizing across NEXUS OS</div>
+                  </div>
+                  <select class="input" data-role="scale" aria-label="UI Font Scale">
+                    <option value="small" ${s.scale === 'small' ? 'selected' : ''}>Compact (13px)</option>
+                    <option value="default" ${s.scale === 'default' ? 'selected' : ''}>Default (14px)</option>
+                    <option value="large" ${s.scale === 'large' ? 'selected' : ''}>Large (15.5px)</option>
+                  </select>
+                </div>
+                <div class="set-row">
+                  <div>
+                    <div style="font-weight:600">Reduced Motion</div>
+                    <div style="font-size:12px;color:var(--muted)">Disable window, menu, and chart transitions</div>
+                  </div>
+                  <input type="checkbox" data-role="motion" aria-label="Reduced Motion" ${s.reducedMotion ? 'checked' : ''} style="width:18px;height:18px">
+                </div>
+              </div>
+            `;
+          } else if (section === 'shortcuts') {
+            contentEl.innerHTML = `
+              <div class="set-group">
+                <h3>Global Keyboard Shortcuts</h3>
+                <table class="exp-table">
+                  <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="kbd-pill">Alt + S</span></td><td>Toggle Start Menu</td></tr>
+                    <tr><td><span class="kbd-pill">Alt + 1 .. 5</span></td><td>Launch Explorer, Terminal, Code Studio, Monitor, or Settings</td></tr>
+                    <tr><td><span class="kbd-pill">Alt + ]</span></td><td>Cycle focus across open windows</td></tr>
+                    <tr><td><span class="kbd-pill">Alt + Enter</span></td><td>Maximize or restore focused window</td></tr>
+                    <tr><td><span class="kbd-pill">Alt + M</span></td><td>Minimize focused window</td></tr>
+                    <tr><td><span class="kbd-pill">Alt + W</span></td><td>Close focused window</td></tr>
+                    <tr><td><span class="kbd-pill">Ctrl / Cmd + S</span></td><td>Save active file in Code Studio</td></tr>
+                    <tr><td><span class="kbd-pill">Escape</span></td><td>Dismiss Start Menu or Context Menu</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            `;
+          } else {
+            const st = VFS.stats();
+            contentEl.innerHTML = `
+              <div class="set-group">
+                <h3>Persistence Engine</h3>
+                <div class="set-row">
+                  <span>Active Storage Backend</span>
+                  <span class="badge badge-accent">${escapeHtml(NexusStorage.backend)}</span>
+                </div>
+                <div class="set-row">
+                  <span>Virtual Filesystem Usage</span>
+                  <span><strong>${st.files}</strong> files, <strong>${st.dirs}</strong> folders (${formatBytes(st.bytes)})</span>
+                </div>
+                <div class="set-row">
+                  <div>
+                    <div style="font-weight:600">Snapshot Backup</div>
+                    <div style="font-size:12px;color:var(--muted)">Export or restore your entire Virtual Filesystem as JSON</div>
+                  </div>
+                  <div style="display:flex;gap:6px">
+                    <button type="button" class="btn btn-sm" data-act="export-vfs">Export JSON</button>
+                    <button type="button" class="btn btn-sm" data-act="import-vfs">Import JSON</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="set-group">
+                <h3>Recovery & Factory Reset</h3>
+                <div class="set-row">
+                  <div>
+                    <div style="font-weight:600">Restore Default Filesystem</div>
+                    <div style="font-size:12px;color:var(--muted)">Recreates starter project files and clears custom files</div>
+                  </div>
+                  ${confirmResetFs
+                    ? `<div style="display:flex;gap:6px">
+                         <button type="button" class="btn btn-sm btn-danger" data-act="do-reset-fs">Confirm Wipe & Restore</button>
+                         <button type="button" class="btn btn-sm" data-act="cancel-reset-fs">Cancel</button>
+                       </div>`
+                    : `<button type="button" class="btn btn-sm btn-danger" data-act="ask-reset-fs">Reset Filesystem</button>`
+                  }
+                </div>
+                <div class="set-row">
+                  <div>
+                    <div style="font-weight:600">Reset Appearance Settings</div>
+                    <div style="font-size:12px;color:var(--muted)">Revert theme, wallpaper, and scale to factory defaults</div>
+                  </div>
+                  <button type="button" class="btn btn-sm" data-act="reset-settings">Reset Settings</button>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        navEl.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-sec]');
+          if (!btn) return;
+          section = btn.dataset.sec;
+          confirmResetFs = false;
+          render();
+        });
+
+        contentEl.addEventListener('click', async (e) => {
+          const th = e.target.closest('[data-theme-pick]')?.dataset.themePick;
+          if (th) await SettingsState.update({ theme: th });
+
+          const wp = e.target.closest('[data-wp-pick]')?.dataset.wpPick;
+          if (wp) await SettingsState.update({ wallpaper: wp });
+
+          const act = e.target.closest('[data-act]')?.dataset.act;
+          if (act === 'export-vfs') {
+            triggerDownload('nexus-vfs-backup.json', JSON.stringify(VFS.nodes, null, 2));
+            notify('Exported VFS snapshot');
+          }
+          if (act === 'import-vfs') importInput.click();
+          if (act === 'ask-reset-fs') { confirmResetFs = true; render(); }
+          if (act === 'cancel-reset-fs') { confirmResetFs = false; render(); }
+          if (act === 'do-reset-fs') {
+            confirmResetFs = false;
+            await VFS.reset();
+            render();
+            notify('Default filesystem restored');
+          }
+          if (act === 'reset-settings') {
+            await SettingsState.reset();
+            render();
+            notify('Appearance settings reset');
+          }
+        });
+
+        importInput.addEventListener('change', async () => {
+          const file = importInput.files?.[0];
+          if (!file) return;
+          try {
+            const txt = await file.text();
+            const parsed = JSON.parse(txt);
+            if (!parsed || typeof parsed !== 'object' || !parsed['/'] || !parsed['/Desktop']) {
+              throw new Error('Invalid VFS backup structure');
+            }
+            VFS.nodes = parsed;
+            await VFS.persist();
+            render();
+            notify('Imported VFS backup');
+          } catch (err) {
+            notify('Import failed: ' + err.message);
+          }
+          importInput.value = '';
+        });
+
+        contentEl.addEventListener('change', async (e) => {
+          if (e.target.matches('[data-role="scale"]')) {
+            await SettingsState.update({ scale: e.target.value });
+          }
+          if (e.target.matches('[data-role="motion"]')) {
+            await SettingsState.update({ reducedMotion: e.target.checked });
+          }
+        });
+
+        win.cleanupFns.push(Bus.on('settings:change', render));
+        win.cleanupFns.push(Bus.on('fs:change', () => { if (section === 'storage') render(); }));
+        render();
+        return {};
+      };
+
+      /* =====================================================================
+         8. DESKTOP SURFACE, TASKBAR, START MENU & CONTEXT MENU
+      ===================================================================== */
+      const desktopEl = document.getElementById('desktop');
+      const desktopIconsEl = document.getElementById('desktop-icons');
+      const startBtn = document.getElementById('start-btn');
+      const startMenu = document.getElementById('start-menu');
+      const smSearch = document.getElementById('sm-search');
+      const smApps = document.getElementById('sm-apps');
+      const smPlaces = document.getElementById('sm-places');
+      const ctxMenu = document.getElementById('context-menu');
+      const tbWindows = document.getElementById('tb-windows');
+
+      function renderDesktopIcons() {
+        const appItems = Object.values(APPS).map(app => ({
+          kind: 'app',
+          id: app.id,
+          label: app.name,
+          icon: app.icon
+        }));
+
+        let fsDesktopItems = [];
+        try {
+          fsDesktopItems = VFS.list('/Desktop').map(entry => ({
+            kind: entry.type,
+            path: entry.path,
+            label: entry.name,
+            icon: entry.type === 'dir' ? ICONS.folder : (/\.(html|css|js)$/i.test(entry.name) ? ICONS.fileCode : ICONS.fileText)
+          }));
+        } catch (_) {}
+
+        const all = [...appItems, ...fsDesktopItems];
+        desktopIconsEl.innerHTML = all.map((item, idx) => `
+          <button type="button" class="desktop-icon" role="listitem" data-idx="${idx}"
+            data-kind="${item.kind}" data-target="${escapeHtml(item.id || item.path)}">
+            <span class="desktop-icon-glyph" aria-hidden="true">${item.icon}</span>
+            <span class="desktop-icon-label">${escapeHtml(item.label)}</span>
+          </button>
+        `).join('');
+      }
+
+      function activateDesktopIcon(btn) {
+        const kind = btn.dataset.kind;
+        const target = btn.dataset.target;
+        if (kind === 'app') WM.open(target);
+        else if (kind === 'dir') WM.open('explorer', { path: target });
+        else WM.open('editor', { filePath: target });
+      }
+
+      desktopIconsEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.desktop-icon');
+        desktopIconsEl.querySelectorAll('.desktop-icon').forEach(b => b.classList.toggle('selected', b === btn));
+      });
+
+      desktopIconsEl.addEventListener('dblclick', (e) => {
+        const btn = e.target.closest('.desktop-icon');
+        if (btn) activateDesktopIcon(btn);
+      });
+
+      desktopIconsEl.addEventListener('keydown', (e) => {
+        const btn = e.target.closest('.desktop-icon');
+        if (btn && e.key === 'Enter') {
+          e.preventDefault();
+          activateDesktopIcon(btn);
+        }
+      });
+
+      desktopEl.addEventListener('pointerdown', (e) => {
+        if (e.target === desktopEl || e.target === desktopIconsEl) {
+          desktopIconsEl.querySelectorAll('.desktop-icon.selected').forEach(b => b.classList.remove('selected'));
+          closeMenus();
+        }
+      });
+
+      function renderTaskbar() {
+        tbWindows.innerHTML = [...WM.windows.values()].map(w => {
+          const meta = APPS[w.appId];
+          const isActive = WM.activeId === w.id && !w.minimized;
+          return `
+            <button type="button" class="tb-win-btn ${isActive ? 'active' : ''} ${w.minimized ? 'minimized' : ''}"
+              data-wid="${w.id}" role="tab" aria-selected="${isActive}">
+              <span class="win-app-icon" aria-hidden="true">${meta ? meta.icon : ''}</span>
+              <span class="tb-win-title">${escapeHtml(w.title)}</span>
+            </button>
+          `;
+        }).join('');
+      }
+
+      tbWindows.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-wid]');
+        if (!btn) return;
+        const wid = btn.dataset.wid;
+        const w = WM.windows.get(wid);
+        if (!w) return;
+        closeMenus();
+        if (w.minimized) WM.restore(wid);
+        else if (WM.activeId === wid) WM.minimize(wid);
+        else WM.focus(wid);
+      });
+
+      function renderStartMenu(query = '') {
+        const q = query.trim().toLowerCase();
+        const apps = Object.values(APPS).filter(a => !q || a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q));
+        smApps.innerHTML = apps.map(a => `
+          <button type="button" class="sm-app-card" data-launch="${a.id}">
+            <span class="sm-app-icon" aria-hidden="true">${a.icon}</span>
+            <span class="sm-app-meta">
+              <div class="sm-app-name">${escapeHtml(a.name)}</div>
+              <div class="sm-app-desc">${escapeHtml(a.desc)}</div>
+            </span>
+          </button>
+        `).join('');
+
+        if (q) {
+          const fileHits = VFS.allFiles().filter(p => p.toLowerCase().includes(q)).slice(0, 8);
+          document.querySelector('#sm-files-section .sm-section-label').textContent = 'Matching Files';
+          smPlaces.innerHTML = fileHits.length
+            ? fileHits.map(p => `<button type="button" class="sm-place-chip" data-open-file="${escapeHtml(p)}">📄 ${escapeHtml(p)}</button>`).join('')
+            : `<span style="font-size:12px;color:var(--muted)">No matching virtual files</span>`;
+        } else {
+          document.querySelector('#sm-files-section .sm-section-label').textContent = 'Quick Folders';
+          const folders = ['/Desktop', '/Documents', '/Projects', '/Projects/webapp'].filter(p => VFS.exists(p));
+          smPlaces.innerHTML = folders.map(p => `<button type="button" class="sm-place-chip" data-open-dir="${escapeHtml(p)}">📁 ${escapeHtml(p)}</button>`).join('');
+        }
+      }
+
+      function toggleStartMenu(force) {
+        const next = typeof force === 'boolean' ? force : !startMenu.classList.contains('open');
+        ctxMenu.classList.remove('open');
+        startMenu.classList.toggle('open', next);
+        startBtn.setAttribute('aria-expanded', String(next));
+        if (next) {
+          smSearch.value = '';
+          renderStartMenu('');
+          setTimeout(() => smSearch.focus(), 20);
+        }
+      }
+
+      function closeMenus() {
+        toggleStartMenu(false);
+        ctxMenu.classList.remove('open');
+      }
+
+      startBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleStartMenu();
+      });
+
+      smSearch.addEventListener('input', () => renderStartMenu(smSearch.value));
+
+      startMenu.addEventListener('click', (e) => {
+        const appId = e.target.closest('[data-launch]')?.dataset.launch;
+        if (appId) { closeMenus(); WM.open(appId); return; }
+        const dir = e.target.closest('[data-open-dir]')?.dataset.openDir;
+        if (dir) { closeMenus(); WM.open('explorer', { path: dir }); return; }
+        const file = e.target.closest('[data-open-file]')?.dataset.openFile;
+        if (file) { closeMenus(); WM.open('editor', { filePath: file }); return; }
+      });
+
+      document.getElementById('sm-tile-btn').addEventListener('click', () => { closeMenus(); WM.tileWindows(); });
+      document.getElementById('sm-cascade-btn').addEventListener('click', () => { closeMenus(); WM.cascadeWindows(); });
+      document.getElementById('sm-close-all-btn').addEventListener('click', () => { closeMenus(); WM.closeAll(); });
+      document.getElementById('tb-monitor-btn').addEventListener('click', () => { closeMenus(); WM.open('monitor'); });
+      document.getElementById('tb-settings-btn').addEventListener('click', () => { closeMenus(); WM.open('settings'); });
+
+      desktopEl.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('.os-window')) return;
+        e.preventDefault();
+        toggleStartMenu(false);
+
+        const iconBtn = e.target.closest('.desktop-icon');
+        let items = [];
+
+        if (iconBtn) {
+          const kind = iconBtn.dataset.kind;
+          const target = iconBtn.dataset.target;
+          items.push({ label: 'Open', action: () => activateDesktopIcon(iconBtn) });
+          if (kind !== 'app' && target !== '/Desktop') {
+            items.push({
+              label: 'Delete from Desktop',
+              danger: true,
+              action: async () => {
+                try { await VFS.remove(target, true); notify('Removed from Desktop'); } catch (_) {}
+              }
+            });
+          }
+        } else {
+          items = [
+            { label: 'New Text File on Desktop', action: async () => {
+              let idx = 1;
+              while (VFS.exists(`/Desktop/note-${idx}.txt`)) idx++;
+              const p = `/Desktop/note-${idx}.txt`;
+              await VFS.writeFile(p, 'New desktop note\n');
+              WM.open('editor', { filePath: p });
+            }},
+            { label: 'New Folder on Desktop', action: async () => {
+              let idx = 1;
+              while (VFS.exists(`/Desktop/Folder-${idx}`)) idx++;
+              await VFS.mkdir(`/Desktop/Folder-${idx}`);
+            }},
+            { sep: true },
+            { label: 'Open Terminal Here', kbd: 'Alt+2', action: () => WM.open('terminal', { cwd: '/Desktop' }) },
+            { label: 'Tile Open Windows', action: () => WM.tileWindows() },
+            { label: 'Cascade Windows', action: () => WM.cascadeWindows() },
+            { sep: true },
+            { label: 'Cycle Color Theme', action: async () => {
+              const order = ['obsidian', 'violet', 'emerald', 'amber', 'daylight'];
+              const next = order[(order.indexOf(SettingsState.data.theme) + 1) % order.length];
+              await SettingsState.update({ theme: next });
+              notify(`Theme: ${next}`);
+            }},
+            { label: 'System Settings', kbd: 'Alt+5', action: () => WM.open('settings') }
+          ];
+        }
+
+        ctxMenu.innerHTML = items.map((it, i) => it.sep
+          ? `<div class="ctx-sep" role="separator"></div>`
+          : `<button type="button" class="ctx-item ${it.danger ? 'danger' : ''}" data-cidx="${i}" role="menuitem">
+               <span>${escapeHtml(it.label)}</span>
+               ${it.kbd ? `<span class="ctx-kbd">${escapeHtml(it.kbd)}</span>` : ''}
+             </button>`
+        ).join('');
+
+        ctxMenu.classList.add('open');
+        const x = Math.min(e.clientX, window.innerWidth - 225);
+        const y = Math.min(e.clientY, window.innerHeight - 260);
+        ctxMenu.style.left = `${Math.max(6, x)}px`;
+        ctxMenu.style.top = `${Math.max(6, y)}px`;
+
+        ctxMenu.onclick = (ev) => {
+          const btn = ev.target.closest('button[data-cidx]');
+          if (!btn) return;
+          const item = items[Number(btn.dataset.cidx)];
+          ctxMenu.classList.remove('open');
+          if (item && item.action) item.action();
+        };
+      });
+
+      document.addEventListener('pointerdown', (e) => {
+        if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
+          toggleStartMenu(false);
+        }
+        if (!e.target.closest('#context-menu')) {
+          ctxMenu.classList.remove('open');
+        }
+      });
+
+      function updateClock() {
+        const now = new Date();
+        document.getElementById('tb-clock-time').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('tb-clock-date').textContent = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      }
+      updateClock();
+      setInterval(updateClock, 10000);
+
+      /* =====================================================================
+         9. GLOBAL KEYBOARD SHORTCUTS
+      ===================================================================== */
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeMenus();
+          return;
+        }
+        if (e.altKey && !e.ctrlKey && !e.metaKey) {
+          const k = e.key.toLowerCase();
+          if (k === 's' || e.code === 'Space') { e.preventDefault(); toggleStartMenu(); }
+          else if (k === '1') { e.preventDefault(); closeMenus(); WM.open('explorer'); }
+          else if (k === '2') { e.preventDefault(); closeMenus(); WM.open('terminal'); }
+          else if (k === '3') { e.preventDefault(); closeMenus(); WM.open('editor'); }
+          else if (k === '4') { e.preventDefault(); closeMenus(); WM.open('monitor'); }
+          else if (k === '5') { e.preventDefault(); closeMenus(); WM.open('settings'); }
+          else if (k === 'w' && WM.activeId) { e.preventDefault(); WM.close(WM.activeId); }
+          else if (k === 'm' && WM.activeId) { e.preventDefault(); WM.minimize(WM.activeId); }
+          else if (e.key === 'Enter' && WM.activeId) { e.preventDefault(); WM.toggleMaximize(WM.activeId); }
+          else if (e.key === ']') { e.preventDefault(); WM.cycleFocus(); }
+        }
+      });
+
+      /* =====================================================================
+         10. HELPERS & KERNEL BOOTSTRAP
+      ===================================================================== */
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatBytes(bytes) {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+      }
+
+      function triggerDownload(filename, content) {
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      Bus.on('fs:change', renderDesktopIcons);
+      Bus.on('wm:change', renderTaskbar);
+
+      async function boot() {
+        await NexusStorage.init();
+        await SettingsState.init();
+        await VFS.init();
+        renderDesktopIcons();
+        renderTaskbar();
+
+        const desk = desktopEl.getBoundingClientRect();
+        if (desk.width >= 760) {
+          WM.open('editor');
+        } else {
+          WM.open('explorer');
+        }
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
